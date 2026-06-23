@@ -70,7 +70,7 @@ export const AiNavigation = ({ isCollapsed }: AiNavigationProps) => {
               const Icon = route.icon;
 
               return (
-                <li key={fullHref} className="relative px-2">
+                <li key={route.label} className="relative px-2">
                   {isActive && !isCollapsed && (
                     <motion.div
                       layoutId="active-ai-nav"

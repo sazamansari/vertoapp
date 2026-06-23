@@ -1,16 +1,18 @@
 'use client';
 
-import { Loader2, LogOut } from 'lucide-react';
+import { Loader2, LogOut, Settings } from 'lucide-react';
 
 import { DottedSeparator } from '@/components/dotted-separator';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { useCurrent } from '@/features/auth/api/use-current';
 import { useLogout } from '@/features/auth/api/use-logout';
+import { useEditProfileModal } from '@/features/auth/hooks/use-edit-profile-modal';
 
 export const UserButton = () => {
   const { data: user, isLoading } = useCurrent();
   const { mutate: logout, isPending } = useLogout();
+  const { open: openEditProfile } = useEditProfileModal();
 
   if (isLoading) {
     return (
@@ -22,14 +24,16 @@ export const UserButton = () => {
 
   if (!user) return null;
 
-  const { name, email } = user;
+  const { name, email, imageUrl } = user as any;
 
   const avatarFallback = name ? name.charAt(0).toUpperCase() : (email.charAt(0).toUpperCase() ?? '?');
+  const avatarUrl = imageUrl || `https://api.dicebear.com/7.x/lorelei/svg?seed=${encodeURIComponent(name || email)}`;
 
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger disabled={isPending} className="relative rounded-full outline-none focus-visible:ring-1 focus-visible:ring-ring">
         <Avatar className="size-10 border border-neutral-300 transition hover:opacity-75">
+          <AvatarImage src={avatarUrl} alt={name} className="object-cover" />
           <AvatarFallback className="flex items-center justify-center bg-neutral-200 font-medium text-neutral-500">
             {avatarFallback}
           </AvatarFallback>
@@ -39,6 +43,7 @@ export const UserButton = () => {
       <DropdownMenuContent align="end" side="bottom" className="w-60" sideOffset={10}>
         <div className="flex flex-col items-center justify-center gap-2 px-2.5 py-4">
           <Avatar className="size-[52px] border border-neutral-300">
+            <AvatarImage src={avatarUrl} alt={name} className="object-cover" />
             <AvatarFallback className="flex items-center justify-center bg-neutral-200 text-xl font-medium text-neutral-500">
               {avatarFallback}
             </AvatarFallback>
@@ -51,6 +56,16 @@ export const UserButton = () => {
         </div>
 
         <DottedSeparator className="mb-1" />
+
+        <DropdownMenuItem
+          onClick={() => openEditProfile()}
+          className="flex h-10 cursor-pointer items-center justify-center font-medium text-neutral-700"
+        >
+          <Settings className="mr-2 size-4" />
+          Edit Profile
+        </DropdownMenuItem>
+
+        <DottedSeparator className="my-1" />
 
         <DropdownMenuItem
           disabled={isPending}

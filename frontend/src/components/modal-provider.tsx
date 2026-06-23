@@ -6,6 +6,7 @@ import { CreateProjectModal } from '@/features/projects/components/create-projec
 import { CreateTaskModal } from '@/features/tasks/components/create-task-modal';
 import { EditTaskModal } from '@/features/tasks/components/edit-task-modal';
 import { CreateWorkspaceModal } from '@/features/workspaces/components/create-workspace-modal';
+import { EditProfileModal } from '@/features/auth/components/edit-profile-modal';
 
 export const ModalProvider = () => {
   const [isMounted, setIsMounted] = useState(false);
@@ -22,6 +23,7 @@ export const ModalProvider = () => {
       <CreateTaskModal />
       <EditTaskModal />
       <CreateWorkspaceModal />
+      <EditProfileModal />
     </>
   );
 };

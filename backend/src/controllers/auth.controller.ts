@@ -22,6 +22,7 @@ export const getCurrentUser = async (req: AuthRequest, res: Response): Promise<v
         $id: user._id.toString(),
         name: user.name,
         email: user.email,
+        imageUrl: user.imageUrl,
       },
     });
   } catch (error: any) {
@@ -98,4 +99,30 @@ export const register = async (req: Request, res: Response): Promise<void> => {
 export const logout = async (_req: Request, res: Response): Promise<void> => {
   res.clearCookie(AUTH_COOKIE, { path: '/' });
   res.json({ success: true });
+};
+
+export const updateProfile = async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    const userId = req.user._id;
+    const { name, imageUrl } = req.body;
+
+    await connectToDatabase();
+    const user = await User.findByIdAndUpdate(userId, { name, imageUrl }, { new: true });
+    if (!user) {
+      res.status(404).json({ error: 'User not found' });
+      return;
+    }
+
+    res.json({
+      success: true,
+      data: {
+        $id: user._id.toString(),
+        name: user.name,
+        email: user.email,
+        imageUrl: user.imageUrl,
+      },
+    });
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
 };

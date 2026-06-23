@@ -9,8 +9,12 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
+import { apiClient } from '@/lib/api-client';
+import { useWorkspaceId } from '@/features/workspaces/hooks/use-workspace-id';
+import { toast } from 'sonner';
 
 export const AiChat = () => {
+  const workspaceId = useWorkspaceId();
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState([
     {
@@ -21,27 +25,43 @@ export const AiChat = () => {
   ]);
   const [isTyping, setIsTyping] = useState(false);
 
-  const handleSend = (e?: React.FormEvent) => {
+  const handleSend = async (e?: React.FormEvent) => {
     e?.preventDefault();
     if (!input.trim()) return;
 
     const userMessage = { id: Date.now().toString(), role: 'user', content: input };
     setMessages((prev) => [...prev, userMessage]);
+    const userPrompt = input;
     setInput('');
     setIsTyping(true);
 
-    // Mock AI response delay
-    setTimeout(() => {
+    try {
+      const response = await apiClient.post('/api/ai/chat', {
+        json: { message: userPrompt, workspaceId }
+      });
+      
+      const assistantResponse = (response as any)?.content || "I'm sorry, I couldn't process that request.";
       setMessages((prev) => [
         ...prev,
         {
-          id: (Date.now() + 1).toString(),
+          id: Date.now().toString(),
           role: 'assistant',
-          content: "I'm processing your request. Currently I'm running in demo mode, but soon I'll be able to execute complex project management workflows!"
+          content: assistantResponse
         }
       ]);
+    } catch (error) {
+      toast.error('Failed to communicate with Vetro AI');
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: Date.now().toString(),
+          role: 'assistant',
+          content: "Sorry, I had trouble reaching the AI service. Please make sure the AI service is running."
+        }
+      ]);
+    } finally {
       setIsTyping(false);
-    }, 1500);
+    }
   };
 
   return (
@@ -78,7 +98,7 @@ export const AiChat = () => {
                     <Bot className="size-4" />
                   </div>
                 )}
-                <div className="text-sm leading-relaxed">{message.content}</div>
+                <div className="text-sm leading-relaxed whitespace-pre-wrap">{message.content}</div>
                 {message.role === 'user' && (
                   <div className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-full bg-indigo-500/20 text-white">
                     <User className="size-4" />

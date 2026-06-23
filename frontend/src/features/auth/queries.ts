@@ -5,7 +5,7 @@ import { AUTH_COOKIE } from '@/features/auth/constants';
 
 export const getCurrent = async () => {
   try {
-    const session = getSessionCookie();
+    const session = await getSessionCookie();
     if (!session) return null;
 
     const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001';

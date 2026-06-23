@@ -5,7 +5,7 @@ import { AUTH_COOKIE } from '@/features/auth/constants';
 
 export const getWorkspaces = async () => {
   try {
-    const session = getSessionCookie();
+    const session = await getSessionCookie();
     if (!session) return { documents: [], total: 0 };
 
     const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001';
