@@ -1,0 +1,7 @@
+export type Project = {
+    $id: string;
+    name: string;
+    imageUrl?: string;
+    workspaceId: string;
+};
+//# sourceMappingURL=types.d.ts.map
