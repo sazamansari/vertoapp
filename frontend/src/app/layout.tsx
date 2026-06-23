@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
+import { Suspense } from 'react';
 import type { PropsWithChildren } from 'react';
 
 import { QueryProvider } from '@/components/query-provider';
@@ -30,7 +31,9 @@ const RootLayout = ({ children }: Readonly<PropsWithChildren>) => {
           <QueryProvider>
             <Toaster theme="system" richColors closeButton />
 
-            {children}
+            <Suspense fallback={null}>
+              {children}
+            </Suspense>
           </QueryProvider>
         </ThemeProvider>
       </body>
