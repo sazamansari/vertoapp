@@ -14,7 +14,7 @@ const getProjectWorkspaceId = async (req: AuthRequest) => {
 };
 
 router.get('/', authMiddleware, getProjects);
-router.post('/', authMiddleware, requirePermission(Permission.CREATE_PROJECT), upload.single('image'), createProject);
+router.post('/', authMiddleware, upload.single('image'), requirePermission(Permission.CREATE_PROJECT), createProject);
 router.get('/:projectId/analytics', authMiddleware, requirePermission(Permission.VIEW_ANALYTICS, getProjectWorkspaceId), getProjectAnalytics);
 router.get('/:projectId', authMiddleware, getProject);
 router.patch('/:projectId', authMiddleware, requirePermission(Permission.UPDATE_PROJECT, getProjectWorkspaceId), upload.single('image'), updateProject);

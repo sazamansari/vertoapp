@@ -68,11 +68,11 @@ export const Navbar = () => {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-48">
-            <DropdownMenuItem onClick={openCreateTask} className="gap-2 cursor-pointer">
+            <DropdownMenuItem onClick={() => openCreateTask()} className="gap-2 cursor-pointer">
               <CheckCircle2 className="size-4" />
               New Task
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={openCreateProject} className="gap-2 cursor-pointer">
+            <DropdownMenuItem onClick={() => openCreateProject()} className="gap-2 cursor-pointer">
               <FolderIcon className="size-4" />
               New Project
             </DropdownMenuItem>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import type { PropsWithChildren } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
@@ -16,7 +16,9 @@ const DashboardLayout = ({ children }: PropsWithChildren) => {
 
   return (
     <div className="min-h-screen bg-neutral-50 dark:bg-neutral-950">
-      <ModalProvider />
+      <Suspense fallback={null}>
+        <ModalProvider />
+      </Suspense>
 
       <div className="flex size-full">
         {/* Desktop Sidebar Container */}
