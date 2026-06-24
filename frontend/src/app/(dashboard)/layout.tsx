@@ -67,7 +67,7 @@ const DashboardLayout = ({ children }: PropsWithChildren) => {
               <span className="text-xs text-neutral-400 dark:text-neutral-500">Copyright © Hitbullseye 2026 | All Rights Reserved</span>
             </footer>
           </div>
-        </motion.div>
+        </div>
       </div>
     </div>
   );
