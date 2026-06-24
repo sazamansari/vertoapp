@@ -51,13 +51,11 @@ const DashboardLayout = ({ children }: PropsWithChildren) => {
         </motion.div>
 
         {/* Main Content Area */}
-        <motion.div 
-          initial={false}
-          animate={{ 
-            paddingLeft: isCollapsed ? "80px" : "264px",
-          }}
-          transition={{ type: "spring", bounce: 0, duration: 0.3 }}
-          className="w-full lg:pl-[264px]"
+        <div 
+          className={cn(
+            "w-full transition-[padding] duration-300 ease-in-out",
+            isCollapsed ? "lg:pl-[80px]" : "lg:pl-[264px]"
+          )}
         >
           <div className="mx-auto flex min-h-screen flex-col max-w-screen-xl">
             <Navbar />
