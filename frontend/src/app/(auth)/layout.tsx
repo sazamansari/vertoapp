@@ -180,10 +180,13 @@ export default function AuthLayout({ children }: PropsWithChildren) {
           initial={{ opacity: 0, y: -16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.45, ease: 'easeOut' }}
-          className="flex items-center justify-end p-6"
+          className="flex items-center justify-between p-6 lg:justify-end"
         >
+          <div className="lg:hidden">
+            <Logo />
+          </div>
           <div className="flex items-center gap-x-4">
-            <span className="text-sm text-neutral-500 dark:text-neutral-400">
+            <span className="hidden text-sm text-neutral-500 dark:text-neutral-400 sm:block">
               {isSignIn ? "Don't have an account?" : 'Already have an account?'}
             </span>
             <Button variant="outline" className="rounded-full font-medium shadow-sm" asChild>
