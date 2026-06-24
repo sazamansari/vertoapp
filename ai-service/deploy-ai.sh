@@ -38,6 +38,18 @@ echo "🛠️  Running remote installation and startup..."
 ssh -i $SSH_KEY -o StrictHostKeyChecking=no ${REMOTE_USER}@${EC2_IP} "
     cd ${REMOTE_PATH}
     
+    # Install OS dependencies (Python, Node.js, PM2)
+    echo 'Checking and installing OS dependencies...'
+    if command -v apt-get >/dev/null; then
+        sudo apt-get update
+        sudo apt-get install -y python3 python3-pip python3-venv nodejs npm
+        sudo npm install -g pm2 || true
+    elif command -v yum >/dev/null; then
+        sudo yum update -y
+        sudo yum install -y python3 python3-pip nodejs npm
+        sudo npm install -g pm2 || true
+    fi
+
     # Setup virtual environment
     if [ ! -d venv ]; then
         echo 'Recreating virtual env on EC2...'
