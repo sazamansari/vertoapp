@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import type { PropsWithChildren } from 'react';
 import { Sparkles, BrainCircuit, Activity, Zap, ShieldAlert, CheckCircle2 } from 'lucide-react';
@@ -49,12 +49,17 @@ const features = [
 
 export default function AuthLayout({ children }: PropsWithChildren) {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const isSignIn = pathname === '/sign-in';
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  const callbackUrl = searchParams.get('callbackUrl');
+  const targetPath = isSignIn ? '/sign-up' : '/sign-in';
+  const targetUrl = callbackUrl ? `${targetPath}?callbackUrl=${encodeURIComponent(callbackUrl)}` : targetPath;
 
   return (
     <main className="flex min-h-screen bg-neutral-50 dark:bg-neutral-950">
@@ -190,7 +195,7 @@ export default function AuthLayout({ children }: PropsWithChildren) {
               {isSignIn ? "Don't have an account?" : 'Already have an account?'}
             </span>
             <Button variant="outline" className="rounded-full font-medium shadow-sm" asChild>
-              <Link href={isSignIn ? '/sign-up' : '/sign-in'}>
+              <Link href={targetUrl}>
                 {isSignIn ? 'Create account' : 'Log in'}
               </Link>
             </Button>
