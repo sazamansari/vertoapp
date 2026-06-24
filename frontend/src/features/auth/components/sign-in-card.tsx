@@ -52,7 +52,7 @@ export const SignInCard = () => {
             <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 text-blue-600 mb-6">
               <Lock className="w-6 h-6" />
             </div>
-            <CardTitle className="text-2xl font-bold mb-2">Welcome back to verto</CardTitle>
+            <CardTitle className="text-2xl font-bold mb-2">Welcome back to evolvian</CardTitle>
             <CardDescription className="text-sm text-neutral-500">
               Access your workspace, projects, tasks, AI insights, and team analytics.
             </CardDescription>
@@ -103,7 +103,7 @@ export const SignInCard = () => {
                   size="lg"
                   className="w-full bg-blue-600 hover:bg-blue-700 h-11 text-base group"
                 >
-                  Log in to Vetro AI Flow
+                  Log in to Evolvian AI Flow
                   <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
                 </Button>
               </motion.div>

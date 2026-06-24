@@ -1,5 +1,5 @@
 #!/bin/bash
-# Verto AI Flow EC2 Deployment Script
+# Evolvian AI Flow EC2 Deployment Script
 # Usage: ./deploy-ai.sh [EC2_PUBLIC_IP]
 
 set -e
@@ -7,10 +7,10 @@ set -e
 EC2_IP=${1:-"13.206.132.18"}
 SSH_KEY="~/.ssh/id_rsa"
 REMOTE_USER="ec2-user"
-REMOTE_PATH="/home/ec2-user/verto/ai-service"
+REMOTE_PATH="/home/ec2-user/evolvian/ai-service"
 
 echo "=========================================================="
-echo "🚀 Deploying Vetro AI Flow Service to AWS EC2: $EC2_IP"
+echo "🚀 Deploying Evolvian AI Flow Service to AWS EC2: $EC2_IP"
 echo "=========================================================="
 
 # 1. Ensure remote directory exists
@@ -61,18 +61,18 @@ ssh -i $SSH_KEY -o StrictHostKeyChecking=no ${REMOTE_USER}@${EC2_IP} "
     ./venv/bin/pip install -r requirements.txt
     
     # Stop existing PM2 process if any
-    pm2 stop vetro-ai-service 2>/dev/null || true
-    pm2 delete vetro-ai-service 2>/dev/null || true
+    pm2 stop evolvian-ai-service 2>/dev/null || true
+    pm2 delete evolvian-ai-service 2>/dev/null || true
     
     # Start AI service with PM2 using local virtualenv uvicorn
     echo 'Starting AI Service under PM2 daemon...'
-    pm2 start \"./venv/bin/uvicorn main:app --host 0.0.0.0 --port 8000\" --name \"vetro-ai-service\"
+    pm2 start \"./venv/bin/uvicorn main:app --host 0.0.0.0 --port 8000\" --name \"evolvian-ai-service\"
     
     # Save PM2 state
     pm2 save
 "
 
 echo "=========================================================="
-echo "✅ Vetro AI Flow successfully deployed and running on EC2!"
+echo "✅ Evolvian AI Flow successfully deployed and running on EC2!"
 echo "📡 Health Endpoint: http://${EC2_IP}:8000/health"
 echo "=========================================================="

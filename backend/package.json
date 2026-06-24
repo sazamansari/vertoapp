@@ -1,7 +1,7 @@
 {
   "name": "jira-clone-backend",
   "version": "1.0.0",
-  "description": "PredictFlow Express API backend for Vetro",
+  "description": "PredictFlow Express API backend for Evolvian",
   "main": "dist/server.js",
   "scripts": {
     "dev": "nodemon --exec ts-node src/server.ts",

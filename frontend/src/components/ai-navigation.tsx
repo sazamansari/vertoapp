@@ -42,11 +42,11 @@ export const AiNavigation = ({ isCollapsed }: AiNavigationProps) => {
           isCollapsed && "justify-center px-2"
         )}
         onClick={() => setIsOpen(!isOpen)}
-        title={isCollapsed ? "Vetro AI Flow" : undefined}
+        title={isCollapsed ? "Evolvian AI Flow" : undefined}
       >
         <div className="flex items-center gap-2 text-sm font-semibold text-indigo-600 dark:text-indigo-400">
           <Sparkles className="size-4" />
-          {!isCollapsed && <span>Vetro AI Flow</span>}
+          {!isCollapsed && <span>Evolvian AI Flow</span>}
         </div>
         {!isCollapsed && (
           <motion.div animate={{ rotate: isOpen ? 180 : 0 }}>

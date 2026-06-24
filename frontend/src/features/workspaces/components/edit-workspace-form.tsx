@@ -360,7 +360,7 @@ export const EditWorkspaceForm = ({ onCancel, initialValues, analytics, membersC
                       <Sparkles className="size-6 text-white" />
                     </div>
                     <div>
-                      <h2 className="text-xl font-semibold tracking-tight">Vetro AI Flow</h2>
+                      <h2 className="text-xl font-semibold tracking-tight">Evolvian AI Flow</h2>
                       <p className="text-sm text-muted-foreground mt-1">Advanced predictive insights and workload optimization.</p>
                     </div>
                   </div>

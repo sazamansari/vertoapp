@@ -17,12 +17,12 @@ export const aiHealth = async (_req: Request, res: Response): Promise<void> => {
   try {
     const response = await fetch(`${AI_SERVICE_URL}/health`);
     if (response.ok) {
-      res.json({ status: "online", service: "Vetro AI Flow" });
+      res.json({ status: "online", service: "Evolvian AI Flow" });
     } else {
-      res.json({ status: "offline", service: "Vetro AI Flow" });
+      res.json({ status: "offline", service: "Evolvian AI Flow" });
     }
   } catch {
-    res.json({ status: "offline", service: "Vetro AI Flow" });
+    res.json({ status: "offline", service: "Evolvian AI Flow" });
   }
 };
 

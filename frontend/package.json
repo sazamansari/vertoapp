@@ -1,5 +1,5 @@
 {
-  "name": "verto",
+  "name": "evolvian",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -16,7 +16,7 @@
     "email": "sanidhya.verma12345@gmail.com",
     "url": "https://github.com/sanidhyy"
   },
-  "description": "Full-stack Verto using Next.js 14 and Appwrite.",
+  "description": "Full-stack Evolvian using Next.js 14 and Appwrite.",
   "keywords": [
     "reactjs",
     "nextjs",

@@ -44,7 +44,7 @@ export const PremiumAiWidget = () => {
               <div>
                 <h3 className="text-lg font-semibold tracking-tight text-neutral-900 dark:text-neutral-100 flex items-center gap-2">
                   <BrainCircuit className="size-5 animate-pulse text-neutral-400" />
-                  Connecting to Verto AI Flow...
+                  Connecting to Evolvian AI Flow...
                 </h3>
                 <p className="mt-1 text-sm text-muted-foreground animate-pulse">Initializing intelligent project analytics...</p>
               </div>
@@ -65,7 +65,7 @@ export const PremiumAiWidget = () => {
           <motion.div key="offline" variants={containerVariants} initial="hidden" animate="show" exit="exit" className="flex h-full flex-col">
             <div className="mb-6">
               <h3 className="text-lg font-semibold tracking-tight text-red-600 dark:text-red-500 flex items-center gap-2">
-                ⚠️ Verto AI Flow Offline
+                ⚠️ Evolvian AI Flow Offline
               </h3>
               <p className="mt-2 text-sm text-neutral-600 dark:text-neutral-400">
                 AI services are temporarily unavailable.
@@ -94,7 +94,7 @@ export const PremiumAiWidget = () => {
             <div className="mb-6 flex items-start justify-between">
               <div>
                 <h3 className="text-lg font-semibold tracking-tight text-neutral-900 dark:text-neutral-100 flex items-center gap-2">
-                  ✨ Verto AI Flow
+                  ✨ Evolvian AI Flow
                 </h3>
                 <p className="mt-1 text-sm text-muted-foreground">AI-powered team productivity and project intelligence</p>
               </div>

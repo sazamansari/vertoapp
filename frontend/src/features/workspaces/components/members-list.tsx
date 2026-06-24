@@ -373,7 +373,7 @@ export const MembersList = () => {
                       <Sparkles className="size-4 text-white" />
                     </div>
                     <div>
-                      <h3 className="font-semibold tracking-tight text-neutral-900 dark:text-white">Vetro AI Flow</h3>
+                      <h3 className="font-semibold tracking-tight text-neutral-900 dark:text-white">Evolvian AI Flow</h3>
                       <p className="text-xs text-muted-foreground">Team Insights</p>
                     </div>
                   </div>

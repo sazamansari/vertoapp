@@ -20,7 +20,7 @@ export const AiChat = () => {
     {
       id: '1',
       role: 'assistant',
-      content: "Hi, I'm Vetro AI. I can analyze team performance, generate sprint plans, detect project risks, assign tasks intelligently, and provide actionable insights."
+      content: "Hi, I'm Evolvian AI. I can analyze team performance, generate sprint plans, detect project risks, assign tasks intelligently, and provide actionable insights."
     }
   ]);
   const [isTyping, setIsTyping] = useState(false);
@@ -50,7 +50,7 @@ export const AiChat = () => {
         }
       ]);
     } catch (error) {
-      toast.error('Failed to communicate with Vetro AI');
+      toast.error('Failed to communicate with Evolvian AI');
       setMessages((prev) => [
         ...prev,
         {
@@ -72,7 +72,7 @@ export const AiChat = () => {
             <Sparkles className="size-5" />
           </div>
           <div>
-            <CardTitle className="text-xl font-bold">Vetro AI Assistant</CardTitle>
+            <CardTitle className="text-xl font-bold">Evolvian AI Assistant</CardTitle>
             <p className="text-sm text-muted-foreground">Ask me anything about your workspace</p>
           </div>
         </div>
@@ -131,7 +131,7 @@ export const AiChat = () => {
           <Input 
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Ask Vetro AI to analyze workload, predict risks..."
+            placeholder="Ask Evolvian AI to analyze workload, predict risks..."
             className="flex-1 rounded-full px-4"
             disabled={isTyping}
           />

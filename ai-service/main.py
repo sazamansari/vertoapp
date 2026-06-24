@@ -17,10 +17,10 @@ logging.basicConfig(
     format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
     handlers=[logging.StreamHandler()]
 )
-logger = logging.getLogger("vetro-ai-service")
+logger = logging.getLogger("evolvian-ai-service")
 
 app = FastAPI(
-    title="Vetro AI Flow Production Service",
+    title="Evolvian AI Flow Production Service",
     description="Production-grade AI Team Intelligence and Workload Analytics Service",
     version="1.0.0"
 )
@@ -160,13 +160,13 @@ class ChatInput(BaseModel):
 def health():
     """Service health indicator verifying internal services and database latency."""
     if db is None:
-        return {"status": "degraded", "service": "Vetro AI Flow", "database": "offline"}
+        return {"status": "degraded", "service": "Evolvian AI Flow", "database": "offline"}
     try:
         mongo_client.admin.command('ping')
-        return {"status": "online", "service": "Vetro AI Flow", "database": "connected"}
+        return {"status": "online", "service": "Evolvian AI Flow", "database": "connected"}
     except PyMongoError as e:
         logger.error(f"Health check database ping failed: {e}")
-        return {"status": "degraded", "service": "Vetro AI Flow", "database": "unreachable"}
+        return {"status": "degraded", "service": "Evolvian AI Flow", "database": "unreachable"}
 
 @app.post("/predict/completion")
 def predict_completion(data: PredictCompletionInput):
@@ -831,7 +831,7 @@ def ai_chat(data: ChatInput):
                 resp = "I can analyze delivery risks! Please select or open a workspace so I can check for bottleneck workloads and overdue tasks."
         elif "hello" in prompt or "hi" in prompt:
             resp = (
-                "Hello! I am Vetro AI, your project intelligence assistant. 🚀\n"
+                "Hello! I am Evolvian AI, your project intelligence assistant. 🚀\n"
                 "I can analyze workspace velocity, plan sprints, predict completion risk, recommend developer assignments, and auto-generate task breakdowns.\n"
                 f"{workspace_stats if workspace_stats else 'Select a workspace and ask me anything about your team activity!'}"
             )
