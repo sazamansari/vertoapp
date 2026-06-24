@@ -8,12 +8,14 @@ import { useGetProjects } from '@/features/projects/api/use-get-projects';
 import { ProjectAvatar } from '@/features/projects/components/project-avatar';
 import { useCreateProjectModal } from '@/features/projects/hooks/use-create-project-modal';
 import { useWorkspaceId } from '@/features/workspaces/hooks/use-workspace-id';
+import { useCurrentMember } from '@/features/members/api/use-current-member';
 import { cn } from '@/lib/utils';
 
 export const Projects = () => {
   const pathname = usePathname();
   const workspaceId = useWorkspaceId();
 
+  const { isAdmin } = useCurrentMember(workspaceId);
   const { open } = useCreateProjectModal();
   const { data: projects } = useGetProjects({
     workspaceId,
@@ -24,9 +26,11 @@ export const Projects = () => {
       <div className="flex items-center justify-between">
         <p className="text-xs uppercase text-neutral-500">Projects</p>
 
-        <button onClick={open}>
-          <RiAddCircleFill className="size-5 cursor-pointer text-neutral-500 transition hover:opacity-75" />
-        </button>
+        {isAdmin && (
+          <button onClick={open}>
+            <RiAddCircleFill className="size-5 cursor-pointer text-neutral-500 transition hover:opacity-75" />
+          </button>
+        )}
       </div>
 
       {projects?.documents.map((project: any) => {

@@ -10,6 +10,7 @@ import { useWorkspaceId } from '@/features/workspaces/hooks/use-workspace-id';
 import { useGetWorkspace } from '@/features/workspaces/api/use-get-workspace';
 import { useCreateTaskModal } from '@/features/tasks/hooks/use-create-task-modal';
 import { useCreateProjectModal } from '@/features/projects/hooks/use-create-project-modal';
+import { useCurrentMember } from '@/features/members/api/use-current-member';
 
 import { MobileSidebar } from './mobile-sidebar';
 import { Button } from '@/components/ui/button';
@@ -20,6 +21,7 @@ export const Navbar = () => {
   const workspaceId = useWorkspaceId();
   const { data: user } = useCurrent();
   const { data: workspace } = useGetWorkspace({ workspaceId });
+  const { isAdmin } = useCurrentMember(workspaceId);
   const { open: openCreateTask } = useCreateTaskModal();
   const { open: openCreateProject } = useCreateProjectModal();
 
@@ -72,14 +74,18 @@ export const Navbar = () => {
               <CheckCircle2 className="size-4" />
               New Task
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => openCreateProject()} className="gap-2 cursor-pointer">
-              <FolderIcon className="size-4" />
-              New Project
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => router.push(`/workspaces/${workspaceId}/members`)} className="gap-2 cursor-pointer">
-              <UserPlus className="size-4" />
-              Invite Member
-            </DropdownMenuItem>
+            {isAdmin && (
+              <>
+                <DropdownMenuItem onClick={() => openCreateProject()} className="gap-2 cursor-pointer">
+                  <FolderIcon className="size-4" />
+                  New Project
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => router.push(`/workspaces/${workspaceId}/members`)} className="gap-2 cursor-pointer">
+                  <UserPlus className="size-4" />
+                  Invite Member
+                </DropdownMenuItem>
+              </>
+            )}
           </DropdownMenuContent>
         </DropdownMenu>
 

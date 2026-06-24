@@ -29,7 +29,6 @@ export enum Permission {
 export const ADMIN_PERMISSIONS = new Set(Object.values(Permission));
 
 export const MEMBER_PERMISSIONS = new Set([
-  Permission.CREATE_PROJECT,
   Permission.CREATE_TASK,
   Permission.UPDATE_TASK,
   Permission.USE_AI,

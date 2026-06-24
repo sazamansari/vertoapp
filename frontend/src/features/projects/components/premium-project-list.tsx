@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { PremiumCard } from '@/components/ui/premium-card';
 import { useWorkspaceId } from '@/features/workspaces/hooks/use-workspace-id';
 import { useCreateProjectModal } from '@/features/projects/hooks/use-create-project-modal';
+import { useCurrentMember } from '@/features/members/api/use-current-member';
 import type { Project } from '@/features/projects/types';
 import { ProjectAvatar } from './project-avatar';
 
@@ -31,6 +32,7 @@ const itemVariants = {
 
 export const PremiumProjectList = ({ data, total }: PremiumProjectListProps) => {
   const workspaceId = useWorkspaceId();
+  const { isAdmin } = useCurrentMember(workspaceId);
   const { open: createProject } = useCreateProjectModal();
 
   return (
@@ -40,10 +42,12 @@ export const PremiumProjectList = ({ data, total }: PremiumProjectListProps) => 
           <h3 className="text-xl font-semibold tracking-tight">Active Projects</h3>
           <p className="text-sm text-muted-foreground">{total} total projects</p>
         </div>
-        <Button onClick={createProject} variant="secondary" size="sm" className="h-8 gap-1 rounded-full px-3">
-          <PlusIcon className="size-3.5" />
-          <span>New Project</span>
-        </Button>
+        {isAdmin && (
+          <Button onClick={createProject} variant="secondary" size="sm" className="h-8 gap-1 rounded-full px-3">
+            <PlusIcon className="size-3.5" />
+            <span>New Project</span>
+          </Button>
+        )}
       </div>
 
       <motion.div 
