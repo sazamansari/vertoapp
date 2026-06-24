@@ -95,11 +95,29 @@ export const MembersList = () => {
       return;
     }
     const inviteLink = `${window.location.origin}/workspaces/${workspaceId}/join/${workspace.inviteCode}`;
-    navigator.clipboard.writeText(inviteLink).then(() => {
-      toast.success('Workspace invite link copied to clipboard.');
-    }).catch(() => {
-      toast.error('Failed to copy invite link to clipboard.');
-    });
+    
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(inviteLink).then(() => {
+        toast.success('Workspace invite link copied to clipboard.');
+      }).catch(() => {
+        toast.error('Failed to copy invite link to clipboard.');
+      });
+    } else {
+      const textArea = document.createElement("textarea");
+      textArea.value = inviteLink;
+      textArea.style.position = "absolute";
+      textArea.style.left = "-999999px";
+      document.body.prepend(textArea);
+      textArea.select();
+      try {
+        document.execCommand('copy');
+        toast.success('Workspace invite link copied to clipboard.');
+      } catch (error) {
+        toast.error('Failed to copy invite link to clipboard.');
+      } finally {
+        textArea.remove();
+      }
+    }
   };
 
   const isPending = isDeletingMember || isUpdatingMember || (members?.documents?.length === 1);

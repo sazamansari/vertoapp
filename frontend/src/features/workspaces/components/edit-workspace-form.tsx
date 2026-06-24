@@ -125,11 +125,30 @@ export const EditWorkspaceForm = ({ onCancel, initialValues, analytics, membersC
   };
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(fullInviteLink).then(() => {
-      setIsCopied(true);
-      toast.success('Invite link copied to clipboard.');
-      setTimeout(() => setIsCopied(false), 2000);
-    });
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(fullInviteLink).then(() => {
+        setIsCopied(true);
+        toast.success('Invite link copied to clipboard.');
+        setTimeout(() => setIsCopied(false), 2000);
+      });
+    } else {
+      const textArea = document.createElement("textarea");
+      textArea.value = fullInviteLink;
+      textArea.style.position = "absolute";
+      textArea.style.left = "-999999px";
+      document.body.prepend(textArea);
+      textArea.select();
+      try {
+        document.execCommand('copy');
+        setIsCopied(true);
+        toast.success('Invite link copied to clipboard.');
+        setTimeout(() => setIsCopied(false), 2000);
+      } catch (error) {
+        toast.error('Failed to copy invite link to clipboard.');
+      } finally {
+        textArea.remove();
+      }
+    }
   };
 
   const fullInviteLink = `${process.env.NEXT_PUBLIC_APP_BASE_URL}/workspaces/${initialValues.$id}/join/${initialValues.inviteCode}`;
