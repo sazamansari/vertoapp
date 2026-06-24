@@ -26,8 +26,8 @@ const RootLayout = ({ children }: Readonly<PropsWithChildren>) => {
       <body className={cn(inter.className, 'min-h-screen antialiased')}>
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
-          enableSystem
+          defaultTheme="light"
+          enableSystem={false}
           disableTransitionOnChange
         >
           <QueryProvider>
