@@ -78,15 +78,16 @@ export const DataKanban = ({ data, onChange }: DataKanbanProps) => {
       setTasks((prevTasks) => {
         const newTasks = { ...prevTasks };
 
-        // Safely remove the task from the source column
+        // Safely remove the task from the source column using draggableId ($id)
         const sourceColumn = [...newTasks[sourceStatus]];
-        const [movedTask] = sourceColumn.splice(source.index, 1);
+        const movedTaskIndex = sourceColumn.findIndex((t) => t.$id === result.draggableId);
 
-        // If there is no moved task, return the previous state
-        if (!movedTask) {
-          console.error('No task found at the source index.');
+        if (movedTaskIndex === -1) {
+          console.error(`No task found with draggableId: ${result.draggableId} in source column.`);
           return prevTasks;
         }
+
+        const [movedTask] = sourceColumn.splice(movedTaskIndex, 1);
 
         if (!isAdmin && member && movedTask.assigneeId !== member.$id) {
           toast.error("You can only update your own tasks.");
@@ -101,7 +102,8 @@ export const DataKanban = ({ data, onChange }: DataKanbanProps) => {
 
         // Add the task to the destination column
         const destColumn = [...newTasks[destStatus]];
-        destColumn.splice(destination.index, 0, updatedMovedTask);
+        const targetIndex = Math.min(destination.index, destColumn.length);
+        destColumn.splice(targetIndex, 0, updatedMovedTask);
         newTasks[destStatus] = destColumn;
 
         // Prepare minimal update payloads
@@ -110,7 +112,7 @@ export const DataKanban = ({ data, onChange }: DataKanbanProps) => {
         updatesPayload.push({
           $id: updatedMovedTask.$id,
           status: destStatus,
-          position: Math.min((destination.index + 1) * 1000, 1_00_000),
+          position: Math.min((targetIndex + 1) * 1000, 1_00_000),
         });
 
         // Update affected tasks positions in the destination column
@@ -146,10 +148,13 @@ export const DataKanban = ({ data, onChange }: DataKanbanProps) => {
         return newTasks;
       });
 
-      onChange(updatesPayload);
+      if (updatesPayload.length > 0) {
+        onChange(updatesPayload);
+      }
     },
-    [onChange],
+    [onChange, isAdmin, member],
   );
+
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>

@@ -77,7 +77,7 @@ export const MembersList = () => {
       ];
     });
 
-    const csvContent = [headers.join(','), ...csvRows.map(row => row.join(','))].join('\n');
+    const csvContent = [headers.join(','), ...csvRows.map((row: string[]) => row.join(','))].join('\n');
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');

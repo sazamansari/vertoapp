@@ -57,9 +57,9 @@ export const SignUpCard = () => {
             <CardTitle className="text-2xl font-bold mb-2">Create your account</CardTitle>
             <CardDescription className="text-sm text-neutral-500">
               By signing up, you agree to our{' '}
-              <Link href="#" className="text-blue-600 hover:underline">Privacy Policy</Link>{' '}
+              <Link href="/privacy" className="text-blue-600 hover:underline">Privacy Policy</Link>{' '}
               and{' '}
-              <Link href="#" className="text-blue-600 hover:underline">Terms of Service</Link>.
+              <Link href="/terms" className="text-blue-600 hover:underline">Terms of Service</Link>.
             </CardDescription>
           </motion.div>
         </CardHeader>
