@@ -28,11 +28,6 @@ export const WorkspaceIdSettingsClient = () => {
 
   if (isLoading) return <PageLoader />;
 
-  if (!isAdmin) {
-    router.push(`/workspaces/${workspaceId}`);
-    return null;
-  }
-
   if (!initialValues || !workspaceAnalytics || !members || !projects || !tasks) {
     return <PageError message="Failed to load workspace data." />;
   }
@@ -45,6 +40,7 @@ export const WorkspaceIdSettingsClient = () => {
         membersCount={members.total}
         projectsCount={projects.total}
         tasks={tasks.documents}
+        isAdmin={isAdmin}
       />
     </div>
   );

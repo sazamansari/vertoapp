@@ -1,11 +1,11 @@
 'use client';
 
+import QRCode from "react-qr-code";
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   ArrowLeft,
   CopyIcon,
   ImageIcon,
-  QrCode,
   ShieldAlert,
   Sparkles,
   Users,
@@ -46,6 +46,7 @@ interface EditWorkspaceFormProps {
   membersCount?: number;
   projectsCount?: number;
   tasks?: any[];
+  isAdmin?: boolean;
 }
 
 const containerVariants = {
@@ -61,7 +62,7 @@ const itemVariants = {
   show: { opacity: 1, y: 0, transition: { type: "spring" as const, stiffness: 300, damping: 24 } }
 };
 
-export const EditWorkspaceForm = ({ onCancel, initialValues, analytics, membersCount = 0, projectsCount = 0, tasks = [] }: EditWorkspaceFormProps) => {
+export const EditWorkspaceForm = ({ onCancel, initialValues, analytics, membersCount = 0, projectsCount = 0, tasks = [], isAdmin = false }: EditWorkspaceFormProps) => {
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
   const [isCopied, setIsCopied] = useState(false);
@@ -184,7 +185,7 @@ export const EditWorkspaceForm = ({ onCancel, initialValues, analytics, membersC
                   {initialValues.name}
                 </h1>
                 <span className="px-2.5 py-1 text-xs font-semibold bg-indigo-100 dark:bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 rounded-full">
-                  Admin
+                  {isAdmin ? 'Admin' : 'Member'}
                 </span>
               </div>
               <p className="text-muted-foreground flex items-center gap-2">
@@ -223,7 +224,7 @@ export const EditWorkspaceForm = ({ onCancel, initialValues, analytics, membersC
                 <Form {...updateWorkspaceForm}>
                   <form onSubmit={updateWorkspaceForm.handleSubmit(onSubmit)} className="space-y-8">
                     <FormField
-                      disabled={isPending}
+                      disabled={isPending || !isAdmin}
                       control={updateWorkspaceForm.control}
                       name="name"
                       render={({ field }) => (
@@ -232,6 +233,7 @@ export const EditWorkspaceForm = ({ onCancel, initialValues, analytics, membersC
                           <FormControl>
                             <Input 
                               {...field} 
+                              disabled={isPending || !isAdmin}
                               className="h-12 rounded-xl bg-neutral-50 dark:bg-neutral-950/50 border-neutral-200 dark:border-neutral-800 focus-visible:ring-indigo-500 transition-all duration-200" 
                               placeholder="Enter workspace name" 
                             />
@@ -242,7 +244,7 @@ export const EditWorkspaceForm = ({ onCancel, initialValues, analytics, membersC
                     />
 
                     <FormField
-                      disabled={isPending}
+                      disabled={isPending || !isAdmin}
                       control={updateWorkspaceForm.control}
                       name="image"
                       render={({ field }) => (
@@ -250,9 +252,10 @@ export const EditWorkspaceForm = ({ onCancel, initialValues, analytics, membersC
                           <FormLabel className="text-neutral-700 dark:text-neutral-300">Workspace Logo</FormLabel>
                           <div className="mt-2">
                             <div 
-                              onClick={() => inputRef.current?.click()}
+                              onClick={() => isAdmin && inputRef.current?.click()}
                               className={cn(
-                                "relative group cursor-pointer flex flex-col items-center justify-center p-8 border-2 border-dashed rounded-2xl transition-all duration-300",
+                                "relative group flex flex-col items-center justify-center p-8 border-2 border-dashed rounded-2xl transition-all duration-300",
+                                isAdmin ? "cursor-pointer" : "cursor-default",
                                 field.value 
                                   ? "border-indigo-500/50 bg-indigo-50/50 dark:bg-indigo-500/10" 
                                   : "border-neutral-300 dark:border-neutral-700 hover:border-indigo-500 dark:hover:border-indigo-500 hover:bg-neutral-50 dark:hover:bg-neutral-800/50"
@@ -264,7 +267,7 @@ export const EditWorkspaceForm = ({ onCancel, initialValues, analytics, membersC
                                 onChange={handleImageChange}
                                 accept=".jpg, .png, .jpeg"
                                 ref={inputRef}
-                                disabled={isPending}
+                                disabled={isPending || !isAdmin}
                               />
                               
                               {field.value ? (
@@ -277,35 +280,37 @@ export const EditWorkspaceForm = ({ onCancel, initialValues, analytics, membersC
                                       className="object-cover"
                                     />
                                   </div>
-                                  <div className="flex gap-2">
-                                    <Button
-                                      type="button"
-                                      disabled={isPending}
-                                      variant="outline"
-                                      size="sm"
-                                      className="rounded-lg h-9"
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        inputRef.current?.click();
-                                      }}
-                                    >
-                                      Replace
-                                    </Button>
-                                    <Button
-                                      type="button"
-                                      disabled={isPending}
-                                      variant="destructive"
-                                      size="sm"
-                                      className="rounded-lg h-9"
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        field.onChange('');
-                                        if (inputRef.current) inputRef.current.value = '';
-                                      }}
-                                    >
-                                      Remove
-                                    </Button>
-                                  </div>
+                                  {isAdmin && (
+                                    <div className="flex gap-2">
+                                      <Button
+                                        type="button"
+                                        disabled={isPending}
+                                        variant="outline"
+                                        size="sm"
+                                        className="rounded-lg h-9"
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          inputRef.current?.click();
+                                        }}
+                                      >
+                                        Replace
+                                      </Button>
+                                      <Button
+                                        type="button"
+                                        disabled={isPending}
+                                        variant="destructive"
+                                        size="sm"
+                                        className="rounded-lg h-9"
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          field.onChange('');
+                                          if (inputRef.current) inputRef.current.value = '';
+                                        }}
+                                      >
+                                        Remove
+                                      </Button>
+                                    </div>
+                                  )}
                                 </div>
                               ) : (
                                 <div className="flex flex-col items-center text-center gap-3">
@@ -325,18 +330,20 @@ export const EditWorkspaceForm = ({ onCancel, initialValues, analytics, membersC
                       )}
                     />
 
-                    <div className="pt-4 flex items-center justify-end">
-                      <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                        <Button 
-                          disabled={isPending} 
-                          type="submit" 
-                          size="lg"
-                          className="h-12 rounded-xl px-8 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-md shadow-indigo-500/20"
-                        >
-                          Save Changes
-                        </Button>
-                      </motion.div>
-                    </div>
+                    {isAdmin && (
+                      <div className="pt-4 flex items-center justify-end">
+                        <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                          <Button 
+                            disabled={isPending} 
+                            type="submit" 
+                            size="lg"
+                            className="h-12 rounded-xl px-8 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-md shadow-indigo-500/20"
+                          >
+                            Save Changes
+                          </Button>
+                        </motion.div>
+                      </div>
+                    )}
                   </form>
                 </Form>
               </CardContent>
@@ -400,7 +407,7 @@ export const EditWorkspaceForm = ({ onCancel, initialValues, analytics, membersC
                 <div className="flex flex-col gap-6">
                   <div className="p-6 border border-neutral-200 dark:border-neutral-800 rounded-2xl flex flex-col items-center justify-center gap-4 bg-neutral-50/50 dark:bg-neutral-950/50">
                     <div className="p-4 bg-white dark:bg-neutral-900 rounded-2xl shadow-sm border border-neutral-100 dark:border-neutral-800">
-                      <QrCode className="size-16 text-neutral-800 dark:text-neutral-200" />
+                      <QRCode value={fullInviteLink} size={150} />
                     </div>
                     <div className="text-center">
                       <p className="text-sm font-medium">Scan to join</p>
@@ -441,15 +448,17 @@ export const EditWorkspaceForm = ({ onCancel, initialValues, analytics, membersC
                     </motion.div>
                   </div>
 
-                  <Button
-                    variant="outline"
-                    type="button"
-                    disabled={isPending}
-                    onClick={handleResetInviteCode}
-                    className="w-full h-11 rounded-xl text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white border-dashed"
-                  >
-                    Generate New Link
-                  </Button>
+                  {isAdmin && (
+                    <Button
+                      variant="outline"
+                      type="button"
+                      disabled={isPending}
+                      onClick={handleResetInviteCode}
+                      className="w-full h-11 rounded-xl text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white border-dashed"
+                    >
+                      Generate New Link
+                    </Button>
+                  )}
                 </div>
               </CardContent>
             </Card>
@@ -498,35 +507,37 @@ export const EditWorkspaceForm = ({ onCancel, initialValues, analytics, membersC
           </motion.div>
 
           {/* DANGER ZONE */}
-          <motion.div variants={itemVariants}>
-            <Card className="rounded-2xl border-red-200 dark:border-red-900/50 shadow-sm overflow-hidden bg-red-50/30 dark:bg-red-950/10">
-              <CardContent className="p-8">
-                <div className="flex items-start gap-4">
-                  <div className="p-3 bg-red-100 dark:bg-red-900/50 rounded-xl text-red-600 dark:text-red-400">
-                    <ShieldAlert className="size-6" />
+          {isAdmin && (
+            <motion.div variants={itemVariants}>
+              <Card className="rounded-2xl border-red-200 dark:border-red-900/50 shadow-sm overflow-hidden bg-red-50/30 dark:bg-red-950/10">
+                <CardContent className="p-8">
+                  <div className="flex items-start gap-4">
+                    <div className="p-3 bg-red-100 dark:bg-red-900/50 rounded-xl text-red-600 dark:text-red-400">
+                      <ShieldAlert className="size-6" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-semibold tracking-tight text-red-900 dark:text-red-400">Danger Zone</h3>
+                      <p className="text-sm text-red-700/80 dark:text-red-400/80 mt-1 mb-6">
+                        Deleting a workspace is irreversible. All projects, tasks, and data will be permanently removed.
+                      </p>
+                      <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                        <Button
+                          variant="destructive"
+                          type="button"
+                          disabled={isPending}
+                          onClick={handleDelete}
+                          className="h-11 rounded-xl w-full bg-red-600 hover:bg-red-700 text-white border-none shadow-md shadow-red-600/20"
+                        >
+                          <Trash2 className="size-4 mr-2" />
+                          Delete Workspace
+                        </Button>
+                      </motion.div>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="text-lg font-semibold tracking-tight text-red-900 dark:text-red-400">Danger Zone</h3>
-                    <p className="text-sm text-red-700/80 dark:text-red-400/80 mt-1 mb-6">
-                      Deleting a workspace is irreversible. All projects, tasks, and data will be permanently removed.
-                    </p>
-                    <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                      <Button
-                        variant="destructive"
-                        type="button"
-                        disabled={isPending}
-                        onClick={handleDelete}
-                        className="h-11 rounded-xl w-full bg-red-600 hover:bg-red-700 text-white border-none shadow-md shadow-red-600/20"
-                      >
-                        <Trash2 className="size-4 mr-2" />
-                        Delete Workspace
-                      </Button>
-                    </motion.div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          )}
 
         </div>
       </div>
