@@ -20,7 +20,7 @@ export const useRegister = () => {
     },
     onSuccess: () => {
       toast.success('Account created successfully!');
-      router.refresh();
+      window.location.href = '/';
 
       queryClient.invalidateQueries({
         queryKey: ['current']
