@@ -19,6 +19,7 @@ export const useRegister = () => {
       return response;
     },
     onSuccess: () => {
+      toast.success('Account created successfully!');
       router.refresh();
 
       queryClient.invalidateQueries({
