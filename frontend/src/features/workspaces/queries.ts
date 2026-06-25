@@ -8,7 +8,7 @@ export const getWorkspaces = async () => {
     const session = await getSessionCookie();
     if (!session) return { documents: [], total: 0 };
 
-    const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001';
+    const API_URL = process.env.INTERNAL_API_URL || 'http://localhost:5001';
     const response = await fetch(`${API_URL}/api/workspaces`, {
       method: 'GET',
       headers: {

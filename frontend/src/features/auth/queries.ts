@@ -8,7 +8,7 @@ export const getCurrent = async () => {
     const session = await getSessionCookie();
     if (!session) return null;
 
-    const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001';
+    const API_URL = process.env.INTERNAL_API_URL || 'http://localhost:5001';
     const response = await fetch(`${API_URL}/api/auth/current`, {
       method: 'GET',
       headers: {

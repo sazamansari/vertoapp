@@ -1,4 +1,6 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001';
+const API_URL = typeof window !== 'undefined'
+  ? (window.location.hostname === 'localhost' ? 'http://localhost:5001' : 'http://3.7.255.161:5001')
+  : (process.env.INTERNAL_API_URL || 'http://localhost:5001');
 
 type ApiOptions = Omit<RequestInit, 'body'> & {
   json?: unknown;
