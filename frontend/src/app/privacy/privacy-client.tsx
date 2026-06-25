@@ -25,7 +25,7 @@ const sections = [
     id: 'introduction',
     title: '1. Introduction',
     icon: Shield,
-    content: 'Welcome to Evolvian. We respect your privacy and are committed to protecting your personal data. This privacy policy will inform you about how we look after your personal data when you visit our website (regardless of where you visit it from) and tell you about your privacy rights and how the law protects you. By using Evolvian, you consent to the data practices described in this policy.'
+    content: 'Welcome to TaskOrbit. We respect your privacy and are committed to protecting your personal data. This privacy policy will inform you about how we look after your personal data when you visit our website (regardless of where you visit it from) and tell you about your privacy rights and how the law protects you. By using TaskOrbit, you consent to the data practices described in this policy.'
   },
   {
     id: 'collection',
@@ -37,7 +37,7 @@ const sections = [
     id: 'usage',
     title: '3. How We Use Your Data',
     icon: Eye,
-    content: 'Evolvian uses the collected data for various purposes, including:\n\n• To provide, maintain, and improve our project management service.\n• To notify you about changes to our service or workspace activities.\n• To allow you to participate in interactive features when you choose to do so.\n• To provide customer support and collect analysis to improve our workflows.\n• To detect, prevent, and address technical issues or project risks using Evolvian AI Flow.'
+    content: 'TaskOrbit uses the collected data for various purposes, including:\n\n• To provide, maintain, and improve our project management service.\n• To notify you about changes to our service or workspace activities.\n• To allow you to participate in interactive features when you choose to do so.\n• To provide customer support and collect analysis to improve our workflows.\n• To detect, prevent, and address technical issues or project risks using TaskOrbit.'
   },
   {
     id: 'security',
@@ -61,7 +61,7 @@ const sections = [
     id: 'contact',
     title: '7. Contact Us',
     icon: Mail,
-    content: 'If you have any questions about this Privacy Policy, our data practices, or your dealings with Evolvian, please contact us at:\n\nEmail: privacy@evolvianflow.com\nAddress: Hitbullseye Engineering Division, 2026'
+    content: 'If you have any questions about this Privacy Policy, our data practices, or your dealings with TaskOrbit, please contact us at:\n\nEmail: privacy@taskorbit.com\nAddress: Hitbullseye Engineering Division, 2026'
   }
 ];
 
@@ -184,7 +184,7 @@ export const PrivacyClient = () => {
       <footer className="border-t border-neutral-200 dark:border-neutral-800 bg-neutral-100/50 dark:bg-neutral-900/50 py-8 relative z-10">
         <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-neutral-500 dark:text-neutral-400">
           <div className="flex items-center gap-2">
-            <span className="font-semibold text-neutral-700 dark:text-neutral-300">Evolvian</span>
+            <span className="font-semibold text-neutral-700 dark:text-neutral-300">TaskOrbit</span>
             <span>Plan. Predict. Deliver.</span>
           </div>
           <div className="flex items-center gap-x-6">

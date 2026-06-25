@@ -32,7 +32,7 @@ export const AiDashboardWidget = ({ workspaceId, projectId }: { workspaceId: str
     <Card className="shadow-none border-none">
       <CardHeader className="flex flex-row items-center gap-2 pb-2">
         <Sparkles className="size-5 text-blue-600" />
-        <CardTitle>Evolvian AI Flow</CardTitle>
+        <CardTitle>TaskOrbit</CardTitle>
       </CardHeader>
       <CardContent>
         <p className="text-sm text-muted-foreground mb-4">

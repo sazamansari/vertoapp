@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 
 export const siteConfig: Metadata = {
-  title: 'Evolvian',
-  description: 'Full-stack Evolvian using Next.js 14 and Appwrite.',
+  title: 'TaskOrbit',
+  description: 'Full-stack TaskOrbit using Next.js 14 and Appwrite.',
   keywords: [
     'reactjs',
     'nextjs',
@@ -31,22 +31,22 @@ export const siteConfig: Metadata = {
     'software engineering dashboard',
     'nextjs project tracker'
   ],
-  authors: [{ name: 'Evolvian Team', url: 'https://github.com/sanidhyy' }],
+  authors: [{ name: 'TaskOrbit Team', url: 'https://github.com/sanidhyy' }],
   metadataBase: new URL('http://localhost:3000'),
   alternates: {
     canonical: '/',
   },
   openGraph: {
-    title: 'Evolvian — Premium Project Management for Teams',
-    description: 'Plan, track, and release great software faster with Evolvian. Dynamic Kanban boards, team intelligence, and automated sprints.',
+    title: 'TaskOrbit — Premium Project Management for Teams',
+    description: 'Plan, track, and release great software faster with TaskOrbit. Dynamic Kanban boards, team intelligence, and automated sprints.',
     url: 'http://localhost:3000',
-    siteName: 'Evolvian',
+    siteName: 'TaskOrbit',
     images: [
       {
         url: '/icon.png',
         width: 512,
         height: 512,
-        alt: 'Evolvian Logo',
+        alt: 'TaskOrbit Logo',
       },
     ],
     locale: 'en_US',
@@ -54,7 +54,7 @@ export const siteConfig: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Evolvian — Premium Project Management for Teams',
+    title: 'TaskOrbit — Premium Project Management for Teams',
     description: 'AI-powered project management, sprints, and team intelligence.',
     images: ['/icon.png'],
   },

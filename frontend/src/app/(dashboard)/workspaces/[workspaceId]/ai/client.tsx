@@ -39,7 +39,7 @@ export const AiClient = () => {
             <Sparkles className="size-8" />
           </div>
           <h1 className="mb-2 text-4xl font-extrabold tracking-tight md:text-5xl lg:text-6xl">
-            Evolvian AI Flow
+            TaskOrbit
           </h1>
           <h2 className="mb-6 text-xl font-medium text-indigo-600 dark:text-indigo-400 md:text-2xl">
             Plan. Predict. Deliver.

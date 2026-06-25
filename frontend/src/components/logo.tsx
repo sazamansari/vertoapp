@@ -16,8 +16,8 @@ interface LogoProps {
 export const Logo = ({ white }: LogoProps) => {
   return (
     <Link href="/" className="flex items-center gap-x-1.5">
-      <Image src="/hitbullseye_logo.png" alt="Icon" height={40} width={40} unoptimized />
-      <p className={cn('text-2xl font-bold', white ? 'text-white' : 'text-[#111]', font.className)}>Evolvian</p>
+      <Image src="/icon.svg" alt="TaskOrbit Logo" height={40} width={40} unoptimized />
+      <p className={cn('text-2xl font-bold', white ? 'text-white' : 'text-[#111]', font.className)}>TaskOrbit</p>
     </Link>
   );
 };

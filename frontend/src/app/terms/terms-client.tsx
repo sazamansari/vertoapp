@@ -24,19 +24,19 @@ const sections = [
     id: 'agreement',
     title: '1. Agreement to Terms',
     icon: ShieldCheck,
-    content: 'By accessing or using Evolvian, you agree to be bound by these Terms of Service and all applicable laws and regulations. If you do not agree with any of these terms, you are prohibited from using or accessing this site. These Terms of Service constitute a legally binding agreement between you and Evolvian concerning your access to and use of our platform.'
+    content: 'By accessing or using TaskOrbit, you agree to be bound by these Terms of Service and all applicable laws and regulations. If you do not agree with any of these terms, you are prohibited from using or accessing this site. These Terms of Service constitute a legally binding agreement between you and TaskOrbit concerning your access to and use of our platform.'
   },
   {
     id: 'service',
     title: '2. Description of Service',
     icon: Layers,
-    content: 'Evolvian is an AI-powered project management and collaboration platform. It offers sprint planning, workload analysis, risk prediction, and collaboration dashboards. We reserve the right to modify, suspend, or discontinue any aspect of our services at any time, including availability of features, databases, or contents, without prior notice.'
+    content: 'TaskOrbit is an AI-powered project management and collaboration platform. It offers sprint planning, workload analysis, risk prediction, and collaboration dashboards. We reserve the right to modify, suspend, or discontinue any aspect of our services at any time, including availability of features, databases, or contents, without prior notice.'
   },
   {
     id: 'obligations',
     title: '3. User Obligations',
     icon: UserCheck,
-    content: 'As a user of Evolvian, you agree to use the service only for lawful purposes. You are prohibited from:\n\n• Uploading any contents that infringe intellectual property or privacy rights.\n• Attempting to disrupt, disable, or hack the security infrastructure of Evolvian.\n• Deploying automated scraping, crawling, or extraction scripts without authorization.\n• Sharing workspace invite codes or access credentials with unauthorized external parties.'
+    content: 'As a user of TaskOrbit, you agree to use the service only for lawful purposes. You are prohibited from:\n\n• Uploading any contents that infringe intellectual property or privacy rights.\n• Attempting to disrupt, disable, or hack the security infrastructure of TaskOrbit.\n• Deploying automated scraping, crawling, or extraction scripts without authorization.\n• Sharing workspace invite codes or access credentials with unauthorized external parties.'
   },
   {
     id: 'account',
@@ -48,13 +48,13 @@ const sections = [
     id: 'intellectual',
     title: '5. Intellectual Property',
     icon: FileText,
-    content: 'Evolvian and its original contents, logos, code, designs, features, and brand colors are and will remain the exclusive property of Evolvian and its licensors. Our trademarks, logos, and layouts may not be copied or used in connection with any third-party product or service without our prior written consent.'
+    content: 'TaskOrbit and its original contents, logos, code, designs, features, and brand colors are and will remain the exclusive property of TaskOrbit and its licensors. Our trademarks, logos, and layouts may not be copied or used in connection with any third-party product or service without our prior written consent.'
   },
   {
     id: 'liability',
     title: '6. Limitation of Liability',
     icon: AlertTriangle,
-    content: 'In no event shall Evolvian, nor its directors, employees, partners, agents, or affiliates, be liable for any indirect, incidental, special, consequential, or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses, resulting from your access to or use of, or inability to access or use, the service.'
+    content: 'In no event shall TaskOrbit, nor its directors, employees, partners, agents, or affiliates, be liable for any indirect, incidental, special, consequential, or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses, resulting from your access to or use of, or inability to access or use, the service.'
   },
   {
     id: 'governing',
@@ -66,7 +66,7 @@ const sections = [
     id: 'contact',
     title: '8. Contact Us',
     icon: Mail,
-    content: 'If you have any questions or concerns regarding these Terms of Service, please reach out to us at:\n\nEmail: terms@evolvianflow.com\nAddress: Hitbullseye Engineering Division, 2026'
+    content: 'If you have any questions or concerns regarding these Terms of Service, please reach out to us at:\n\nEmail: terms@taskorbit.com\nAddress: Hitbullseye Engineering Division, 2026'
   }
 ];
 
@@ -120,7 +120,7 @@ export const TermsClient = () => {
             Terms of Service
           </h1>
           <p className="text-neutral-500 dark:text-neutral-400 text-lg leading-relaxed">
-            Last Updated: June 23, 2026. Please read these terms carefully before using the Evolvian platform and workspaces.
+            Last Updated: June 23, 2026. Please read these terms carefully before using the TaskOrbit platform and workspaces.
           </p>
         </motion.div>
       </section>
@@ -189,7 +189,7 @@ export const TermsClient = () => {
       <footer className="border-t border-neutral-200 dark:border-neutral-800 bg-neutral-100/50 dark:bg-neutral-900/50 py-8 relative z-10">
         <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-neutral-500 dark:text-neutral-400">
           <div className="flex items-center gap-2">
-            <span className="font-semibold text-neutral-700 dark:text-neutral-300">Evolvian</span>
+            <span className="font-semibold text-neutral-700 dark:text-neutral-300">TaskOrbit</span>
             <span>Plan. Predict. Deliver.</span>
           </div>
           <div className="flex items-center gap-x-6">

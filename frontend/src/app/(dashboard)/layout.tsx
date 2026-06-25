@@ -63,7 +63,7 @@ const DashboardLayout = ({ children }: PropsWithChildren) => {
             
             {/* Global Dashboard Footer */}
             <footer className="mt-auto flex flex-col items-center justify-center gap-1 border-t border-neutral-200/50 p-6 dark:border-neutral-800/50">
-              <span className="text-xs font-medium text-neutral-500 dark:text-neutral-400">Powered by Evolvian</span>
+              <span className="text-xs font-medium text-neutral-500 dark:text-neutral-400">Powered by TaskOrbit</span>
               <span className="text-xs text-neutral-400 dark:text-neutral-500">Copyright © Hitbullseye 2026 | All Rights Reserved</span>
             </footer>
           </div>
