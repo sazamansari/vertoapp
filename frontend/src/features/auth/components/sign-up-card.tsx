@@ -1,5 +1,7 @@
 'use client';
 
+import Image from 'next/image';
+
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -52,7 +54,7 @@ export const SignUpCard = () => {
         <CardHeader className="p-8 pb-6">
           <motion.div variants={fadeUp(0.05)} initial="hidden" animate="show" className="mb-4">
             <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 text-blue-600 mb-6">
-              <UserPlus className="w-6 h-6" />
+              <Image src="/icon.svg" alt="TaskOrbit Icon" height={24} width={24} unoptimized />
             </div>
             <CardTitle className="text-2xl font-bold mb-2">Create your account</CardTitle>
             <CardDescription className="text-sm text-neutral-500">
