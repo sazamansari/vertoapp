@@ -7,6 +7,10 @@ import { OTP } from '../models/OTP';
 import { EmailService } from '../services/EmailService';
 import { AUTH_COOKIE } from '../features/auth/constants';
 import { AuthRequest } from '../middleware/auth.middleware';
+import { OAuth2Client } from 'google-auth-library';
+import crypto from 'crypto';
+
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 const COOKIE_OPTIONS = {
   path: '/',
@@ -255,6 +259,86 @@ export const resendOTP = async (req: Request, res: Response): Promise<void> => {
 
     res.json({ success: true, message: 'New OTP sent to email' });
   } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export const googleLogin = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { credential, accessToken } = req.body;
+
+    if (!credential && !accessToken) {
+      res.status(400).json({ error: 'Google credential or accessToken is required' });
+      return;
+    }
+
+    let email: string, name: string | undefined, picture: string | undefined;
+
+    if (credential) {
+      const ticket = await client.verifyIdToken({
+        idToken: credential,
+        audience: process.env.GOOGLE_CLIENT_ID,
+      });
+
+      const payload = ticket.getPayload();
+      if (!payload || !payload.email) {
+        res.status(400).json({ error: 'Invalid Google token payload' });
+        return;
+      }
+      email = payload.email;
+      name = payload.name;
+      picture = payload.picture;
+    } else if (accessToken) {
+      const response = await fetch(`https://www.googleapis.com/oauth2/v3/userinfo`, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+      const data = await response.json();
+      if (!data.email) {
+        res.status(400).json({ error: 'Invalid Google access token payload' });
+        return;
+      }
+      email = data.email;
+      name = data.name;
+      picture = data.picture;
+    } else {
+      res.status(400).json({ error: 'Invalid token provided' });
+      return;
+    }
+
+    await connectToDatabase();
+    let user = await User.findOne({ email });
+
+    if (!user) {
+      // Create new user with random password since they logged in via Google
+      const randomPassword = crypto.randomBytes(16).toString('hex');
+      const hashedPassword = await bcrypt.hash(randomPassword, 10);
+      user = await User.create({
+        name: name || 'Google User',
+        email,
+        password: hashedPassword,
+        isVerified: true,
+        imageUrl: picture,
+      });
+    } else {
+      // If user exists but is not verified, verify them
+      if (!user.isVerified) {
+        user.isVerified = true;
+        await user.save();
+      }
+      
+      // Update missing fields if needed
+      if (!user.imageUrl && picture) {
+        user.imageUrl = picture;
+        await user.save();
+      }
+    }
+
+    const token = await signJwt({ id: user._id.toString() });
+    res.cookie(AUTH_COOKIE, token, COOKIE_OPTIONS);
+    
+    res.json({ success: true });
+  } catch (error: any) {
+    console.error('Google login error:', error);
     res.status(500).json({ error: error.message });
   }
 };

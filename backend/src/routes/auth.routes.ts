@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import rateLimit from 'express-rate-limit';
 import { authMiddleware } from '../middleware/auth.middleware';
-import { getCurrentUser, login, register, logout, updateProfile, verifyOTP, resendOTP } from '../controllers/auth.controller';
+import { getCurrentUser, login, register, logout, updateProfile, verifyOTP, resendOTP, googleLogin } from '../controllers/auth.controller';
 
 const router = Router();
 
@@ -16,6 +16,7 @@ const resendOTPLimiter = rateLimit({
 router.get('/current', authMiddleware, getCurrentUser);
 router.patch('/profile', authMiddleware, updateProfile);
 router.post('/login', login);
+router.post('/google', googleLogin);
 router.post('/register', register);
 router.post('/signup', register); // Alias for signup
 router.post('/logout', logout);

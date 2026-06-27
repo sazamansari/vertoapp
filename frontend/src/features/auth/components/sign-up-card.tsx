@@ -16,7 +16,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { useRegister } from '@/features/auth/api/use-register';
+import { useGoogleLogin as useApiGoogleLogin } from '@/features/auth/api/use-google-login';
 import { signUpFormSchema } from '@/features/auth/schema';
+import { useGoogleLogin } from '@react-oauth/google';
+import { FcGoogle } from 'react-icons/fc';
 
 const fadeUp = (delay = 0) => ({
   hidden: { opacity: 0, y: 20 },
@@ -26,6 +29,14 @@ const fadeUp = (delay = 0) => ({
 export const SignUpCard = () => {
   const [isRedirecting, setIsRedirecting] = useState(false);
   const { mutate: register, isPending: isRegistering } = useRegister();
+  const { mutate: googleLoginApi, isPending: isGoogleLoggingIn } = useApiGoogleLogin();
+
+  const handleGoogleLogin = useGoogleLogin({
+    onSuccess: (tokenResponse) => {
+      googleLoginApi({ accessToken: tokenResponse.access_token });
+    },
+    onError: () => toast.error('Google Sign-In failed'),
+  });
 
   const signUpForm = useForm<z.infer<typeof signUpFormSchema>>({
     resolver: zodResolver(signUpFormSchema),
@@ -133,6 +144,31 @@ export const SignUpCard = () => {
               </motion.div>
             </form>
           </Form>
+
+          <motion.div variants={fadeUp(0.34)} initial="hidden" animate="show" className="mt-6">
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t border-neutral-200" />
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="bg-white px-2 text-neutral-500">Or continue with</span>
+              </div>
+            </div>
+
+            <div className="mt-6">
+              <Button
+                type="button"
+                onClick={() => handleGoogleLogin()}
+                disabled={isPending || isGoogleLoggingIn}
+                variant="outline"
+                size="lg"
+                className="w-full h-11 text-base bg-white hover:bg-neutral-50 text-neutral-700 border-neutral-200"
+              >
+                <FcGoogle className="mr-2 h-5 w-5" />
+                Sign up with Google
+              </Button>
+            </div>
+          </motion.div>
         </CardContent>
       </Card>
     </motion.div>
