@@ -292,7 +292,7 @@ export const googleLogin = async (req: Request, res: Response): Promise<void> =>
       const response = await fetch(`https://www.googleapis.com/oauth2/v3/userinfo`, {
         headers: { Authorization: `Bearer ${accessToken}` },
       });
-      const data = await response.json();
+      const data = (await response.json()) as { email?: string; name?: string; picture?: string };
       if (!data.email) {
         res.status(400).json({ error: 'Invalid Google access token payload' });
         return;
