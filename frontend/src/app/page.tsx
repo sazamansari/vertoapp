@@ -2,11 +2,12 @@ import { redirect } from 'next/navigation';
 
 import { getCurrent } from '@/features/auth/queries';
 import { getWorkspaces } from '@/features/workspaces/queries';
+import LandingPage from './LandingPage';
 
 const HomePage = async () => {
   const user = await getCurrent();
 
-  if (!user) redirect('/sign-in');
+  if (!user) return <LandingPage />;
 
   const workspaces = await getWorkspaces();
 

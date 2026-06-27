@@ -17,7 +17,7 @@ export const useGoogleLogin = () => {
       return response;
     },
     onSuccess: () => {
-      toast.success('Logged in successfully!');
+      toast.success('Logged in successfully with Google!');
       window.location.href = '/';
 
       queryClient.invalidateQueries({
