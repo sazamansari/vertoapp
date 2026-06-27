@@ -66,7 +66,7 @@ const sections = [
     id: 'contact',
     title: '8. Contact Us',
     icon: Mail,
-    content: 'If you have any questions or concerns regarding these Terms of Service, please reach out to us at:\n\nEmail: terms@taskorbit.com\nAddress: Hitbullseye Engineering Division, 2026'
+    content: 'If you have any questions or concerns regarding these Terms of Service, please reach out to us at:\n\nEmail: anoop@evolvian.com\nAddress: Evolvian Engineering Division, 2026'
   }
 ];
 

@@ -61,7 +61,7 @@ const sections = [
     id: 'contact',
     title: '7. Contact Us',
     icon: Mail,
-    content: 'If you have any questions about this Privacy Policy, our data practices, or your dealings with TaskOrbit, please contact us at:\n\nEmail: privacy@taskorbit.com\nAddress: Hitbullseye Engineering Division, 2026'
+    content: 'If you have any questions about this Privacy Policy, our data practices, or your dealings with TaskOrbit, please contact us at:\n\nEmail: anoop@evolvian.com\nAddress: Evolvian Engineering Division, 2026'
   }
 ];
 
