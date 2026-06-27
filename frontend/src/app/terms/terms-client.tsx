@@ -197,7 +197,7 @@ export const TermsClient = () => {
             <Link href="/privacy" className="hover:underline">Privacy Policy</Link>
           </div>
           <div>
-            <span>Copyright © Hitbullseye 2026 | All Rights Reserved</span>
+            <span>Copyright © Evolvian 2026 | All Rights Reserved</span>
           </div>
         </div>
       </footer>

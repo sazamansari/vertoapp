@@ -47,12 +47,17 @@ app.use('/api/projects', project_routes_1.default);
 app.use('/api/tasks', task_routes_1.default);
 app.use('/api/members', member_routes_1.default);
 app.use('/api/ai', ai_routes_1.default);
+const http_1 = require("http");
+const socket_1 = require("./lib/socket");
 // ── Error Handler ───────────────────────────────────────────
 app.use(error_middleware_1.errorMiddleware);
 // ── Start ───────────────────────────────────────────────────
 const PORT = process.env.PORT ? parseInt(process.env.PORT) : 5001;
-app.listen(PORT, () => {
+const httpServer = (0, http_1.createServer)(app);
+(0, socket_1.initSocket)(httpServer);
+httpServer.listen(PORT, () => {
     console.log(`✅ Express server running on port ${PORT}`);
+    console.log(`✅ Socket.io initialized`);
 });
 exports.default = app;
 //# sourceMappingURL=server.js.map

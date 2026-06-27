@@ -49,14 +49,21 @@ app.use('/api/tasks', taskRoutes);
 app.use('/api/members', memberRoutes);
 app.use('/api/ai', aiRoutes);
 
+import { createServer } from 'http';
+import { initSocket } from './lib/socket';
+
 // ── Error Handler ───────────────────────────────────────────
 app.use(errorMiddleware);
 
 // ── Start ───────────────────────────────────────────────────
 const PORT = process.env.PORT ? parseInt(process.env.PORT) : 5001;
 
-app.listen(PORT, () => {
+const httpServer = createServer(app);
+initSocket(httpServer);
+
+httpServer.listen(PORT, () => {
   console.log(`✅ Express server running on port ${PORT}`);
+  console.log(`✅ Socket.io initialized`);
 });
 
 export default app;

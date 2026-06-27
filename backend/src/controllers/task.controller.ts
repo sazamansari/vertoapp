@@ -5,7 +5,10 @@ import { Task } from '../models/Task';
 import { Project } from '../models/Project';
 import { Member, MemberRole } from '../models/Member';
 import { User } from '../models/User';
+import { Notification } from '../models/Notification';
 import { TaskStatus } from '../features/tasks/types';
+import { EmailService } from '../services/EmailService';
+import { getIO } from '../lib/socket';
 
 const getMember = async (workspaceId: string, userId: string) =>
   Member.findOne({ workspaceId, userId });
@@ -99,7 +102,7 @@ export const getTask = async (req: AuthRequest, res: Response): Promise<void> =>
 // POST /api/tasks
 export const createTask = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
-    const { name, status, workspaceId, projectId, dueDate, assigneeId, priority, complexity, storyPoints, labels } = req.body;
+    const { name, status, workspaceId, projectId, dueDate, assigneeId, priority, complexity, storyPoints, labels, description } = req.body;
     await connectToDatabase();
     const member = await getMember(workspaceId, req.user._id.toString());
     if (!member) { res.status(401).json({ error: 'Unauthorized.' }); return; }
@@ -111,8 +114,44 @@ export const createTask = async (req: AuthRequest, res: Response): Promise<void>
       name, status, workspaceId, projectId,
       dueDate: dueDate ? new Date(dueDate) : undefined,
       assigneeId, position,
-      priority, complexity, storyPoints, labels,
+      priority, complexity, storyPoints, labels, description,
     });
+
+    if (assigneeId) {
+      const assigneeMember = await Member.findById(assigneeId).populate('userId');
+      const project = await Project.findById(projectId);
+      if (assigneeMember && assigneeMember.userId && project) {
+        const assignedUser = await User.findById(assigneeMember.userId);
+        if (assignedUser) {
+          // Send Email
+          await EmailService.sendTaskAssignedEmail(
+            assignedUser.email,
+            assignedUser.name,
+            project.name,
+            task.name,
+            task.priority || 'Normal',
+            task.dueDate || new Date(),
+            task.description || 'No description provided'
+          ).catch(e => console.error('Failed to send email:', e));
+
+          // Save Notification
+          const notification = await Notification.create({
+            userId: assignedUser._id,
+            title: 'New Task Assigned',
+            message: `You have been assigned to task: ${task.name}`,
+            type: 'task_assigned',
+          });
+
+          // Emit Socket event
+          try {
+            getIO().to(assignedUser._id.toString()).emit('notification', notification);
+          } catch (e) {
+            console.error('Socket error:', e);
+          }
+        }
+      }
+    }
+
     res.json({ data: { $id: task._id.toString(), ...task.toObject() } });
   } catch (e: any) { res.status(500).json({ error: e.message }); }
 };
@@ -149,6 +188,42 @@ export const updateTask = async (req: AuthRequest, res: Response): Promise<void>
     Object.keys(updateData).forEach(k => updateData[k] === undefined && delete updateData[k]);
 
     const task = await Task.findByIdAndUpdate(taskId, updateData, { new: true });
+
+    if (task && existing.status !== task.status && (task.status === TaskStatus.IN_REVIEW || task.status === TaskStatus.DONE)) {
+      // Find workspace admins
+      const admins = await Member.find({ workspaceId: existing.workspaceId, role: MemberRole.ADMIN }).populate('userId');
+      const modifier = await User.findById(req.user._id);
+      
+      for (const admin of admins) {
+        if (admin.userId) {
+          const adminUser = await User.findById(admin.userId);
+          if (adminUser && modifier) {
+            if (task.status === TaskStatus.IN_REVIEW) {
+              await EmailService.sendTaskReviewEmail(adminUser.email, adminUser.name, task.name, modifier.name).catch(console.error);
+              
+              const notification = await Notification.create({
+                userId: adminUser._id,
+                title: 'Task Ready for Review',
+                message: `Task "${task.name}" has been moved to Review by ${modifier.name}`,
+                type: 'task_review',
+              });
+              try { getIO().to(adminUser._id.toString()).emit('notification', notification); } catch(e) {}
+            } else if (task.status === TaskStatus.DONE) {
+              await EmailService.sendTaskCompletedEmail(adminUser.email, adminUser.name, task.name, modifier.name, new Date()).catch(console.error);
+              
+              const notification = await Notification.create({
+                userId: adminUser._id,
+                title: 'Task Completed',
+                message: `Task "${task.name}" has been completed by ${modifier.name}`,
+                type: 'task_completed',
+              });
+              try { getIO().to(adminUser._id.toString()).emit('notification', notification); } catch(e) {}
+            }
+          }
+        }
+      }
+    }
+
     res.json({ data: { $id: task?._id.toString(), ...task?.toObject() } });
   } catch (e: any) { res.status(500).json({ error: e.message }); }
 };

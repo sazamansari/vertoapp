@@ -192,7 +192,7 @@ export const PrivacyClient = () => {
             <Link href="/privacy" className="hover:underline text-indigo-600 dark:text-indigo-400 font-medium">Privacy Policy</Link>
           </div>
           <div>
-            <span>Copyright © Hitbullseye 2026 | All Rights Reserved</span>
+            <span>Copyright © Evolvian 2026 | All Rights Reserved</span>
           </div>
         </div>
       </footer>

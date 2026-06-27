@@ -5,6 +5,7 @@ const auth_middleware_1 = require("../middleware/auth.middleware");
 const member_controller_1 = require("../controllers/member.controller");
 const router = (0, express_1.Router)();
 router.get('/', auth_middleware_1.authMiddleware, member_controller_1.getMembers);
+router.get('/workspace/:workspaceId/me', auth_middleware_1.authMiddleware, member_controller_1.getMemberMe);
 router.delete('/:memberId', auth_middleware_1.authMiddleware, member_controller_1.deleteMember);
 router.patch('/:memberId', auth_middleware_1.authMiddleware, member_controller_1.updateMember);
 exports.default = router;

@@ -3,6 +3,8 @@ import bcrypt from 'bcryptjs';
 import { signJwt } from '../lib/auth';
 import connectToDatabase from '../lib/mongoose';
 import { User } from '../models/User';
+import { OTP } from '../models/OTP';
+import { EmailService } from '../services/EmailService';
 import { AUTH_COOKIE } from '../features/auth/constants';
 import { AuthRequest } from '../middleware/auth.middleware';
 
@@ -53,6 +55,11 @@ export const login = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
+    if (!user.isVerified) {
+      res.status(401).json({ error: 'Email not verified. Please verify your email first.', requiresVerification: true, userId: user._id.toString() });
+      return;
+    }
+
     const token = await signJwt({ id: user._id.toString() });
 
     res.cookie(AUTH_COOKIE, token, COOKIE_OPTIONS);
@@ -61,6 +68,8 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     res.status(500).json({ error: error.message });
   }
 };
+
+const generateOTP = () => Math.floor(100000 + Math.random() * 900000).toString();
 
 export const register = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -80,17 +89,48 @@ export const register = async (req: Request, res: Response): Promise<void> => {
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      res.status(409).json({ error: 'User already exists' });
+      if (existingUser.isVerified) {
+        res.status(409).json({ error: 'User already exists' });
+        return;
+      }
+
+      // User exists but is not verified, update details and resend OTP
+      const hashedPassword = await bcrypt.hash(password, 10);
+      existingUser.name = name;
+      existingUser.password = hashedPassword;
+      await existingUser.save();
+
+      await OTP.deleteMany({ userId: existingUser._id });
+
+      const otp = generateOTP();
+      const hashedOTP = await bcrypt.hash(otp, 10);
+
+      await OTP.create({
+        userId: existingUser._id,
+        otp: hashedOTP,
+        expiresAt: new Date(Date.now() + 5 * 60 * 1000), // 5 minutes
+      });
+
+      await EmailService.sendOTPEmail(existingUser.email, existingUser.name, otp);
+
+      res.json({ success: true, message: 'OTP sent to email', userId: existingUser._id.toString() });
       return;
     }
-
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = await User.create({ name, email, password: hashedPassword });
+    const user = await User.create({ name, email, password: hashedPassword, isVerified: false });
 
-    const token = await signJwt({ id: user._id.toString() });
+    const otp = generateOTP();
+    const hashedOTP = await bcrypt.hash(otp, 10);
 
-    res.cookie(AUTH_COOKIE, token, COOKIE_OPTIONS);
-    res.json({ success: true });
+    await OTP.create({
+      userId: user._id,
+      otp: hashedOTP,
+      expiresAt: new Date(Date.now() + 5 * 60 * 1000), // 5 minutes
+    });
+
+    await EmailService.sendOTPEmail(user.email, user.name, otp);
+
+    res.json({ success: true, message: 'OTP sent to email', userId: user._id.toString() });
   } catch (error: any) {
     res.status(500).json({ error: error.message });
   }
@@ -122,6 +162,98 @@ export const updateProfile = async (req: AuthRequest, res: Response): Promise<vo
         imageUrl: user.imageUrl,
       },
     });
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export const verifyOTP = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { userId, otp } = req.body;
+
+    if (!userId || !otp) {
+      res.status(400).json({ error: 'User ID and OTP are required' });
+      return;
+    }
+
+    await connectToDatabase();
+    
+    const user = await User.findById(userId);
+    if (!user) {
+      res.status(404).json({ error: 'User not found' });
+      return;
+    }
+
+    const otpRecord = await OTP.findOne({ userId }).sort({ createdAt: -1 });
+    
+    if (!otpRecord) {
+      res.status(400).json({ error: 'OTP expired or invalid' });
+      return;
+    }
+
+    const isValid = await bcrypt.compare(otp, otpRecord.otp);
+    
+    if (!isValid) {
+      otpRecord.attempts += 1;
+      await otpRecord.save();
+      res.status(400).json({ error: 'Invalid OTP' });
+      return;
+    }
+
+    // Mark user as verified
+    user.isVerified = true;
+    await user.save();
+    
+    // Delete OTP record
+    await OTP.deleteMany({ userId });
+
+    // Login user automatically
+    const token = await signJwt({ id: user._id.toString() });
+    res.cookie(AUTH_COOKIE, token, COOKIE_OPTIONS);
+    
+    res.json({ success: true, message: 'Email verified successfully' });
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export const resendOTP = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { userId } = req.body;
+
+    if (!userId) {
+      res.status(400).json({ error: 'User ID is required' });
+      return;
+    }
+
+    await connectToDatabase();
+    
+    const user = await User.findById(userId);
+    if (!user) {
+      res.status(404).json({ error: 'User not found' });
+      return;
+    }
+
+    if (user.isVerified) {
+      res.status(400).json({ error: 'User already verified' });
+      return;
+    }
+
+    // Delete existing OTPs
+    await OTP.deleteMany({ userId });
+
+    const otp = generateOTP();
+    const hashedOTP = await bcrypt.hash(otp, 10);
+
+    await OTP.create({
+      userId: user._id,
+      otp: hashedOTP,
+      expiresAt: new Date(Date.now() + 5 * 60 * 1000), // 5 minutes
+    });
+
+    await EmailService.sendOTPEmail(user.email, user.name, otp);
+
+    res.json({ success: true, message: 'New OTP sent to email' });
   } catch (error: any) {
     res.status(500).json({ error: error.message });
   }

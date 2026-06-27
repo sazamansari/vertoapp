@@ -219,14 +219,14 @@ export default function AuthLayout({ children }: PropsWithChildren) {
           transition={{ delay: 0.6, duration: 0.5 }}
           className="p-6 text-center text-sm text-neutral-400 flex flex-col gap-1"
         >
-          <span className="font-medium text-neutral-500 dark:text-neutral-300">Powered by TaskOrbit</span>
+          <span className="font-medium text-neutral-500 dark:text-neutral-300">Powered by evolvian</span>
           <div className="flex items-center justify-center gap-x-4 text-xs text-neutral-400 dark:text-neutral-500 my-1">
             <Link href="/privacy" className="hover:underline hover:text-neutral-600 dark:hover:text-neutral-300">Privacy Policy</Link>
             <span className="size-1 rounded-full bg-neutral-300 dark:bg-neutral-700" />
             <Link href="/terms" className="hover:underline hover:text-neutral-600 dark:hover:text-neutral-300">Terms of Service</Link>
           </div>
           <span>Plan. Predict. Deliver.</span>
-          <span className="mt-2 text-xs">Copyright © Hitbullseye 2026 | All Rights Reserved</span>
+          <span className="mt-2 text-xs">Copyright © Evolvian 2026 | All Rights Reserved</span>
         </motion.div>
       </div>
     </main>

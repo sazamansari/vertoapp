@@ -9,6 +9,10 @@ const Task_1 = require("../models/Task");
 const Project_1 = require("../models/Project");
 const Member_1 = require("../models/Member");
 const User_1 = require("../models/User");
+const Notification_1 = require("../models/Notification");
+const types_1 = require("../features/tasks/types");
+const EmailService_1 = require("../services/EmailService");
+const socket_1 = require("../lib/socket");
 const getMember = async (workspaceId, userId) => Member_1.Member.findOne({ workspaceId, userId });
 const mapTask = (task, project, assignee) => ({
     $id: task._id.toString(),
@@ -113,7 +117,7 @@ exports.getTask = getTask;
 // POST /api/tasks
 const createTask = async (req, res) => {
     try {
-        const { name, status, workspaceId, projectId, dueDate, assigneeId, priority, complexity, storyPoints, labels } = req.body;
+        const { name, status, workspaceId, projectId, dueDate, assigneeId, priority, complexity, storyPoints, labels, description } = req.body;
         await (0, mongoose_1.default)();
         const member = await getMember(workspaceId, req.user._id.toString());
         if (!member) {
@@ -126,8 +130,33 @@ const createTask = async (req, res) => {
             name, status, workspaceId, projectId,
             dueDate: dueDate ? new Date(dueDate) : undefined,
             assigneeId, position,
-            priority, complexity, storyPoints, labels,
+            priority, complexity, storyPoints, labels, description,
         });
+        if (assigneeId) {
+            const assigneeMember = await Member_1.Member.findById(assigneeId).populate('userId');
+            const project = await Project_1.Project.findById(projectId);
+            if (assigneeMember && assigneeMember.userId && project) {
+                const assignedUser = await User_1.User.findById(assigneeMember.userId);
+                if (assignedUser) {
+                    // Send Email
+                    await EmailService_1.EmailService.sendTaskAssignedEmail(assignedUser.email, assignedUser.name, project.name, task.name, task.priority || 'Normal', task.dueDate || new Date(), task.description || 'No description provided').catch(e => console.error('Failed to send email:', e));
+                    // Save Notification
+                    const notification = await Notification_1.Notification.create({
+                        userId: assignedUser._id,
+                        title: 'New Task Assigned',
+                        message: `You have been assigned to task: ${task.name}`,
+                        type: 'task_assigned',
+                    });
+                    // Emit Socket event
+                    try {
+                        (0, socket_1.getIO)().to(assignedUser._id.toString()).emit('notification', notification);
+                    }
+                    catch (e) {
+                        console.error('Socket error:', e);
+                    }
+                }
+            }
+        }
         res.json({ data: { $id: task._id.toString(), ...task.toObject() } });
     }
     catch (e) {
@@ -145,18 +174,66 @@ const updateTask = async (req, res) => {
             res.status(404).json({ error: 'Task not found' });
             return;
         }
-        const member = await getMember(existing.workspaceId.toString(), req.user._id.toString());
+        // Member is attached by rbac.middleware.ts, but we'll fetch just in case it's missed
+        const member = req.member || await getMember(existing.workspaceId.toString(), req.user._id.toString());
         if (!member) {
             res.status(401).json({ error: 'Unauthorized.' });
             return;
         }
+        if (member.role === Member_1.MemberRole.MEMBER && existing.assigneeId.toString() !== member._id.toString()) {
+            res.status(403).json({ error: 'Forbidden. You can only update your own tasks.' });
+            return;
+        }
         const { name, status, description, projectId, dueDate, assigneeId, priority, complexity, storyPoints, labels } = req.body;
+        // Prevent members from reassigning tasks to others
+        if (member.role === Member_1.MemberRole.MEMBER && assigneeId && assigneeId !== member._id.toString()) {
+            res.status(403).json({ error: 'Forbidden. You cannot reassign your tasks.' });
+            return;
+        }
         const updateData = { name, status, projectId, assigneeId, description, priority, complexity, storyPoints, labels };
         if (dueDate)
             updateData.dueDate = new Date(dueDate);
         // Remove undefined keys
         Object.keys(updateData).forEach(k => updateData[k] === undefined && delete updateData[k]);
         const task = await Task_1.Task.findByIdAndUpdate(taskId, updateData, { new: true });
+        if (task && existing.status !== task.status && (task.status === types_1.TaskStatus.IN_REVIEW || task.status === types_1.TaskStatus.DONE)) {
+            // Find workspace admins
+            const admins = await Member_1.Member.find({ workspaceId: existing.workspaceId, role: Member_1.MemberRole.ADMIN }).populate('userId');
+            const modifier = await User_1.User.findById(req.user._id);
+            for (const admin of admins) {
+                if (admin.userId) {
+                    const adminUser = await User_1.User.findById(admin.userId);
+                    if (adminUser && modifier) {
+                        if (task.status === types_1.TaskStatus.IN_REVIEW) {
+                            await EmailService_1.EmailService.sendTaskReviewEmail(adminUser.email, adminUser.name, task.name, modifier.name).catch(console.error);
+                            const notification = await Notification_1.Notification.create({
+                                userId: adminUser._id,
+                                title: 'Task Ready for Review',
+                                message: `Task "${task.name}" has been moved to Review by ${modifier.name}`,
+                                type: 'task_review',
+                            });
+                            try {
+                                (0, socket_1.getIO)().to(adminUser._id.toString()).emit('notification', notification);
+                            }
+                            catch (e) { }
+                        }
+                        else if (task.status === types_1.TaskStatus.DONE) {
+                            await EmailService_1.EmailService.sendTaskCompletedEmail(adminUser.email, adminUser.name, task.name, modifier.name, new Date()).catch(console.error);
+                            const notification = await Notification_1.Notification.create({
+                                userId: adminUser._id,
+                                title: 'Task Completed',
+                                message: `Task "${task.name}" has been completed by ${modifier.name}`,
+                                type: 'task_completed',
+                            });
+                            try {
+                                (0, socket_1.getIO)().to(adminUser._id.toString()).emit('notification', notification);
+                            }
+                            catch (e) { }
+                        }
+                    }
+                }
+            }
+        }
         res.json({ data: { $id: task?._id.toString(), ...task?.toObject() } });
     }
     catch (e) {
@@ -194,16 +271,27 @@ const bulkUpdateTasks = async (req, res) => {
         await (0, mongoose_1.default)();
         const taskIds = tasks.map((t) => t.$id);
         const tasksToUpdate = await Task_1.Task.find({ _id: { $in: taskIds } }).lean();
+        if (tasksToUpdate.length === 0) {
+            res.json({ data: { updatedTasks: [] } });
+            return;
+        }
         const workspaceIds = new Set(tasksToUpdate.map((t) => t.workspaceId.toString()));
         if (workspaceIds.size !== 1) {
             res.status(400).json({ error: 'All tasks must belong to the same workspace.' });
             return;
         }
         const workspaceId = [...workspaceIds][0];
-        const member = await getMember(workspaceId, req.user._id.toString());
+        const member = req.member || await getMember(workspaceId, req.user._id.toString());
         if (!member) {
             res.status(401).json({ error: 'Unauthorized.' });
             return;
+        }
+        if (member.role === Member_1.MemberRole.MEMBER) {
+            const unauthorizedTask = tasksToUpdate.find(t => t.assigneeId.toString() !== member._id.toString());
+            if (unauthorizedTask) {
+                res.status(403).json({ error: 'Forbidden. You can only update your own tasks.' });
+                return;
+            }
         }
         const updatedTasks = await Promise.all(tasks.map(async (t) => Task_1.Task.findByIdAndUpdate(t.$id, { status: t.status, position: t.position }, { new: true })));
         res.json({ data: { updatedTasks, workspaceId } });

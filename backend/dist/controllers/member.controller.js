@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateMember = exports.deleteMember = exports.getMembers = void 0;
+exports.updateMember = exports.deleteMember = exports.getMemberMe = exports.getMembers = void 0;
 const mongoose_1 = __importDefault(require("../lib/mongoose"));
 const Member_1 = require("../models/Member");
 const User_1 = require("../models/User");
@@ -36,6 +36,32 @@ const getMembers = async (req, res) => {
     }
 };
 exports.getMembers = getMembers;
+const getMemberMe = async (req, res) => {
+    try {
+        const { workspaceId } = req.params;
+        await (0, mongoose_1.default)();
+        const member = await getMember(workspaceId, req.user._id.toString());
+        if (!member) {
+            res.status(401).json({ error: 'Unauthorized.' });
+            return;
+        }
+        res.json({
+            success: true,
+            data: {
+                member: {
+                    $id: member._id.toString(),
+                    role: member.role,
+                    workspaceId: member.workspaceId.toString(),
+                    userId: member.userId.toString()
+                }
+            }
+        });
+    }
+    catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+};
+exports.getMemberMe = getMemberMe;
 // DELETE /api/members/:memberId
 const deleteMember = async (req, res) => {
     try {
@@ -56,8 +82,9 @@ const deleteMember = async (req, res) => {
             res.status(401).json({ error: 'Unauthorized.' });
             return;
         }
+        // User can delete themselves (leave workspace) OR Admin can delete users
         if (requestingMember._id.toString() !== memberToDelete._id.toString() && requestingMember.role !== types_1.MemberRole.ADMIN) {
-            res.status(401).json({ error: 'Unauthorized.' });
+            res.status(403).json({ error: 'Forbidden. Admin privileges required.' });
             return;
         }
         await Member_1.Member.findByIdAndDelete(memberId);
@@ -86,7 +113,7 @@ const updateMember = async (req, res) => {
         }
         const requestingMember = await getMember(memberToUpdate.workspaceId.toString(), req.user._id.toString());
         if (!requestingMember || requestingMember.role !== types_1.MemberRole.ADMIN) {
-            res.status(401).json({ error: 'Unauthorized.' });
+            res.status(403).json({ error: 'Forbidden. Admin privileges required.' });
             return;
         }
         await Member_1.Member.findByIdAndUpdate(memberId, { role });

@@ -9,6 +9,8 @@ const UserSchema = new mongoose_1.default.Schema({
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String }, // Optional for OAuth
+    imageUrl: { type: String },
+    isVerified: { type: Boolean, default: false },
 }, { timestamps: true });
 exports.User = mongoose_1.default.models.User || mongoose_1.default.model('User', UserSchema);
 //# sourceMappingURL=User.js.map

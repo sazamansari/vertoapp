@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.aiChat = exports.estimateDeadline = exports.detectRisks = exports.planSprint = exports.generateTasks = exports.analyzePerformance = exports.recommendTeam = exports.predictCompletion = exports.aiHealth = void 0;
+exports.getAiInsights = exports.aiChat = exports.estimateDeadline = exports.detectRisks = exports.planSprint = exports.generateTasks = exports.analyzePerformance = exports.recommendTeam = exports.predictCompletion = exports.aiHealth = void 0;
 const AI_SERVICE_URL = process.env.AI_SERVICE_URL || 'http://localhost:8000';
 const proxyToAI = async (endpoint, body) => {
     const response = await fetch(`${AI_SERVICE_URL}${endpoint}`, {
@@ -13,11 +13,16 @@ const proxyToAI = async (endpoint, body) => {
 // GET /api/ai/health
 const aiHealth = async (_req, res) => {
     try {
-        const data = await fetch(`${AI_SERVICE_URL}/health`).then((r) => r.json());
-        res.json(data);
+        const response = await fetch(`${AI_SERVICE_URL}/health`);
+        if (response.ok) {
+            res.json({ status: "online", service: "Evolvian AI Flow" });
+        }
+        else {
+            res.json({ status: "offline", service: "Evolvian AI Flow" });
+        }
     }
     catch {
-        res.json({ status: 'ai-service unavailable', timestamp: new Date().toISOString() });
+        res.json({ status: "offline", service: "Evolvian AI Flow" });
     }
 };
 exports.aiHealth = aiHealth;
@@ -109,4 +114,16 @@ const aiChat = async (req, res) => {
     }
 };
 exports.aiChat = aiChat;
+// GET /api/ai/insights
+const getAiInsights = async (req, res) => {
+    try {
+        const response = await fetch(`${AI_SERVICE_URL}/insights`);
+        const data = await response.json();
+        res.json(data);
+    }
+    catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+};
+exports.getAiInsights = getAiInsights;
 //# sourceMappingURL=ai.controller.js.map

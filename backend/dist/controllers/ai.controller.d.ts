@@ -9,4 +9,5 @@ export declare const planSprint: (req: AuthRequest, res: Response) => Promise<vo
 export declare const detectRisks: (req: AuthRequest, res: Response) => Promise<void>;
 export declare const estimateDeadline: (req: AuthRequest, res: Response) => Promise<void>;
 export declare const aiChat: (req: AuthRequest, res: Response) => Promise<void>;
+export declare const getAiInsights: (req: AuthRequest, res: Response) => Promise<void>;
 //# sourceMappingURL=ai.controller.d.ts.map

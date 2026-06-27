@@ -18,9 +18,15 @@ export const useRegister = () => {
       
       return response;
     },
-    onSuccess: () => {
-      toast.success('Account created successfully!');
-      window.location.href = '/';
+    onSuccess: (data) => {
+      toast.success('OTP sent to your email!');
+      
+      const userId = data?.userId;
+      if (userId) {
+        router.push(`/sign-up/verify?userId=${userId}`);
+      } else {
+        router.push('/');
+      }
 
       queryClient.invalidateQueries({
         queryKey: ['current']

@@ -26,8 +26,13 @@ export const useLogin = () => {
         queryKey: ['current']
       });
     },
-    onError: () => {
-      toast.error('Email or Password is incorrect!');
+    onError: (error: any) => {
+      if (error?.data?.requiresVerification && error?.data?.userId) {
+        toast.error('Email not verified. Redirecting to verification...');
+        router.push(`/sign-up/verify?userId=${error.data.userId}`);
+        return;
+      }
+      toast.error(error.message || 'Email or Password is incorrect!');
     }
       });
 

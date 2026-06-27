@@ -83,7 +83,7 @@ export const Analytics = ({ data }: ProjectAnalyticsResponseType) => {
         <ScrollBar orientation="horizontal" />
       </ScrollArea>
       <div className="flex justify-end pr-1">
-        <p className="text-xs font-medium text-muted-foreground">Powered by TaskOrbit</p>
+        <p className="text-xs font-medium text-muted-foreground">Powered by evolvian</p>
       </div>
     </div>
   );
