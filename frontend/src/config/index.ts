@@ -43,7 +43,7 @@ export const siteConfig: Metadata = {
     siteName: 'TaskOrbit',
     images: [
       {
-        url: '/icon.png',
+        url: '/icon.svg',
         width: 512,
         height: 512,
         alt: 'TaskOrbit Logo',
@@ -56,7 +56,7 @@ export const siteConfig: Metadata = {
     card: 'summary_large_image',
     title: 'TaskOrbit — Premium Project Management for Teams',
     description: 'AI-powered project management, sprints, and team intelligence.',
-    images: ['/icon.png'],
+    images: ['/icon.svg'],
   },
   robots: {
     index: true,
@@ -70,7 +70,7 @@ export const siteConfig: Metadata = {
     },
   },
   icons: {
-    icon: '/icon.png',
+    icon: '/icon.svg',
   },
 } as const;
 
