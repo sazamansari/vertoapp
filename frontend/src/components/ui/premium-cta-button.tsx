@@ -39,7 +39,7 @@ export function PremiumCTAButton({
           "hover:border-transparent hover:text-indigo-900 group",
           className
         )}
-        {...props}
+        {...(props as any)}
       >
         {/* Hover Gradient Background Fill */}
         <div 
@@ -93,7 +93,7 @@ export function PremiumCTAButton({
         "shadow-[0_0_20px_rgba(99,102,241,0.4)] hover:shadow-[0_0_40px_rgba(99,102,241,0.8)] border border-white/10",
         className
       )}
-      {...props}
+      {...(props as any)}
     >
       {/* Animated gradient movement on hover */}
       <motion.div 

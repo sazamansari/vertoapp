@@ -44,7 +44,7 @@ export function MagneticButton({
         "relative overflow-hidden group rounded-full",
         className
       )}
-      {...props}
+      {...(props as any)}
     >
       <span className="relative z-10">{children}</span>
       {/* Ripple/Glow effect */}

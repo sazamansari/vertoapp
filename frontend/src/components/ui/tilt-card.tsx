@@ -94,7 +94,7 @@ export function TiltCard({
         transformStyle: "preserve-3d",
       }}
       className={cn("relative transition-all duration-500 ease-out z-10", className, isHovered && "scale-105 z-50")}
-      {...props}
+      {...(props as any)}
     >
       {/* Animated Glowing Border Outline */}
       <motion.div 

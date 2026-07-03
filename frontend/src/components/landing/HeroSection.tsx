@@ -14,7 +14,7 @@ import {
 // Letter-by-letter headline animation
 const headlineWords = ["Build.", "Learn.", "Deliver.", "With", "AI."];
 
-const containerVariants = {
+const containerVariants: any = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
@@ -22,7 +22,7 @@ const containerVariants = {
   }
 };
 
-const wordVariants = {
+const wordVariants: any = {
   hidden: { opacity: 0, y: 20, filter: "blur(10px)" },
   visible: { 
     opacity: 1, 
