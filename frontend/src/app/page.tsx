@@ -1,8 +1,13 @@
 import { redirect } from 'next/navigation';
+import { Metadata } from 'next';
 
 import { getCurrent } from '@/features/auth/queries';
 import { getWorkspaces } from '@/features/workspaces/queries';
 import LandingPage from './LandingPage';
+
+export const metadata: Metadata = {
+  title: "Evolvian.",
+};
 
 const HomePage = async () => {
   const user = await getCurrent();
