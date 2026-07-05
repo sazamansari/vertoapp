@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { AuthRequest } from '../middleware/auth.middleware';
 
-const AI_SERVICE_URL = process.env.AI_SERVICE_URL || 'http://localhost:8000';
+const AI_SERVICE_URL = (process.env.AI_SERVICE_URL || 'http://localhost:8000').trim();
 
 const proxyToAI = async (endpoint: string, body: any) => {
   const response = await fetch(`${AI_SERVICE_URL}${endpoint}`, {
