@@ -1,20 +1,14 @@
-"use client";
-
-import React, { useEffect } from "react";
+import React from "react";
+import dynamic from "next/dynamic";
 import { BackgroundEffects } from "@/components/landing/BackgroundEffects";
 import { HeroSection } from "@/components/landing/HeroSection";
-import { InteractiveComparison } from "@/components/landing/InteractiveComparison";
-import { TargetAudience } from "@/components/landing/TargetAudience";
-import { SocialProof } from "@/components/landing/SocialProof";
+
+// Dynamically import below-the-fold components
+const InteractiveComparison = dynamic(() => import("@/components/landing/InteractiveComparison").then(mod => mod.InteractiveComparison));
+const TargetAudience = dynamic(() => import("@/components/landing/TargetAudience").then(mod => mod.TargetAudience));
+const SocialProof = dynamic(() => import("@/components/landing/SocialProof").then(mod => mod.SocialProof));
 
 export default function LandingPage() {
-  // Smooth scroll behavior can be applied here or globally
-  useEffect(() => {
-    document.documentElement.style.scrollBehavior = "smooth";
-    return () => {
-      document.documentElement.style.scrollBehavior = "auto";
-    };
-  }, []);
 
   return (
     <div className="relative min-h-screen bg-white selection:bg-indigo-100 selection:text-indigo-900 overflow-x-hidden font-sans">

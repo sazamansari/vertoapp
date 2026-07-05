@@ -151,7 +151,7 @@ export function HeroSection() {
               <TaskOrbitIllustration />
               
               <h3 className="text-2xl font-bold mb-1 flex items-center gap-2">
-                <Image src="/icon.svg" alt="TaskOrbit Logo" height={28} width={28} unoptimized />
+                <Image src="/icon.svg" alt="TaskOrbit Logo" height={28} width={28} unoptimized priority />
                 TaskOrbit
                 <span className="px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 text-[10px] uppercase font-bold tracking-wider border border-indigo-500/30">
                   AI Active
@@ -255,7 +255,7 @@ export function HeroSection() {
               <CodeSkillIllustration />
               
               <h3 className="text-2xl font-bold mb-1 flex items-center gap-2">
-                <Image src="/logo.svg" alt="CodeSkill Logo" height={28} width={28} unoptimized />
+                <Image src="/logo.svg" alt="CodeSkill Logo" height={28} width={28} unoptimized priority />
                 CodeSkill
                 <span className="px-2 py-0.5 rounded-full bg-orange-500/20 text-orange-300 text-[10px] uppercase font-bold tracking-wider border border-orange-500/30">
                   Interview Mode
