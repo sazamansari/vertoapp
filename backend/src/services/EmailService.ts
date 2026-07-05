@@ -17,11 +17,12 @@ export class EmailService {
       return true;
     }
 
-    const fromEmail = process.env.SES_FROM_EMAIL || 'noreply@evolvian.in';
+    const fromEmail = (process.env.SES_FROM_EMAIL || 'noreply@evolvian.in').trim();
+    const recipientEmail = to ? to.trim() : "";
 
     const command = new SendEmailCommand({
       Destination: {
-        ToAddresses: [to],
+        ToAddresses: [recipientEmail],
       },
       Message: {
         Body: {
